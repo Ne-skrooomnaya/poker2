@@ -4,6 +4,9 @@ const router = express.Router();
 const User = require('../models/user.model'); // Нужен для поиска telegramId по userId (ObjectId)
 const Rating = require('../models/rating.model');
 const mongoose = require('mongoose'); // Для валидации ObjectId
+const { authenticateUser, authorizeAdmin  } = require('../middleware/authMiddleware')
+const adminController = require('../controllers/admin.controller')
+
 
 router.post('/update-rating', async (req, res) => {
   // Фронтенд отправляет userId (который является ObjectId из User) и score
