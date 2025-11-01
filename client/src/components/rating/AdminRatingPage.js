@@ -31,9 +31,8 @@ function AdminRatingPage({ user }) { // Предполагается, что use
   }
 
   try {
-    // Изменяем здесь: отправляем telegramId вместо userId
     const response = await axios.post(`${BACKEND_URL}/admin/update-rating`, {
-      telegramId: selectedUserId, // <-- ИЗМЕНИЛИ: userId -> telegramId
+      userId: selectedUserId, // <-- Это должно быть ObjectId, что соответствует логике
       score: score,
     });
 
