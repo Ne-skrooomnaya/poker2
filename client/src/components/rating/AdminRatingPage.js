@@ -25,31 +25,35 @@ function AdminRatingPage({ user }) { // Предполагается, что use
   }, []);
 
   const handleUpdateRating = async () => {
-    if (!selectedUserId || score === null || score === undefined) {
-      setMessage("Пожалуйста, выберите пользователя и введите балл.");
-      return;
-    }
-
-    try {
-      // Предполагается, что у вас есть эндпоинт для обновления рейтинга
-      // Например, POST /admin/update-rating
-      const response = await axios.post(`${BACKEND_URL}/admin/update-rating`, {
-        userId: selectedUserId, // ID пользователя для обновления
-        score: score,
-      });
-      setMessage(response.data.message);
-      // Можно обновить список пользователей или рейтинг после успешного обновления
-      // Например, повторно вызвать fetchUsers()
-    } catch (error) {
-      console.error("Error updating rating:", error);
-      setMessage(`Ошибка при обновлении рейтинга: ${error.response?.data?.message || error.message}`);
-    }
-  };
-
-  // Проверка роли пользователя, если это необходимо
-  if (user.role !== 'admin') {
-    return <div>У вас нет доступа к этой странице.</div>;
+  if (!selectedUserId || score === undefined || score === null) {
+    setMessage("Пожалуйста, выберите пользователя и введите балл.");
+    return;
   }
+
+  try {
+    // Изменяем здесь: отправляем telegramId вместо userId
+    const response = await axios.post(`${BACKEND_URL}/admin/update-rating`, {
+      telegramId: selectedUserId, // <-- ИЗМЕНИЛИ: userId -> telegramId
+      score: score,
+    });
+
+    setMessage(response.data.message);
+    // Возможно, здесь нужно обновить список пользователей или сбросить форму
+    // fetchUsers(); // Если есть такая функция
+    // setScore(0);
+    // setSelectedUserId(null);
+
+  } catch (error) {
+    console.error("Error updating rating:", error);
+    let errorMessage = "Ошибка при обновлении рейтинга.";
+    if (error.response && error.response.data && error.response.data.message) {
+      errorMessage = error.response.data.message;
+    } else if (error.request) {
+      errorMessage = "Сервер недоступен.";
+    }
+    setMessage(errorMessage);
+  }
+};
 
   return (
     <div style={{ padding: '20px' }}>
