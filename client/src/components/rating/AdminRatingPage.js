@@ -1,10 +1,10 @@
 // client/src/components/rating/AdminRatingPage.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { loginUser } from '../../hooks/useTelegram'; // Убедитесь, что этот файл существует!
+import useTelegram from '../../hooks/useTelegram'; // Убедитесь, что этот файл существует!
 
 const AdminRatingPage = () => {
-    const { user, token } = loginUser();
+    const { user, token } = useTelegram();
     const [ratings, setRatings] = useState([]);
     const [usersForSelect, setUsersForSelect] = useState([]); // Список всех пользователей для выбора
     const [loading, setLoading] = useState(true);
