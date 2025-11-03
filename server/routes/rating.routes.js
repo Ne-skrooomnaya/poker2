@@ -3,9 +3,13 @@ const express = require('express');
 const router = express.Router();
 const Rating = require('../models/rating.model');
 const User = require('../models/user.model');
-const mongoose = require('mongoose');
+const ratingController = require('../controllers/rating.controller');
 
+const mongoose = require('mongoose');
 // GET /rating - Получить список рейтингов
+// GET /api/rating - Получить все записи рейтинга
+router.get('/', ratingController.getAllRatings);
+
 router.get('/', async (req, res) => {
   try {
     // Получаем все записи рейтинга, сортируем по убыванию счета
