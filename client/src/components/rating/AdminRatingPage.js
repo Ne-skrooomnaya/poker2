@@ -1,7 +1,7 @@
 // client/src/pages/AdminRatingPage;
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import RatingList from './RatingList'; // Или 
 const BACKEND_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 function AdminRatingPage({ user }) { // Предполагается, что user передается из App.js
@@ -9,6 +9,7 @@ function AdminRatingPage({ user }) { // Предполагается, что use
   const [selectedUserId, setSelectedUserId] = useState('');
   const [score, setScore] = useState(0);
   const [message, setMessage] = useState('');
+ const [refreshRatingList, setRefreshRatingList] = useState(0);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -23,6 +24,15 @@ function AdminRatingPage({ user }) { // Предполагается, что use
     };
     fetchUsers();
   }, []);
+
+ const handleAdminAction = () => {
+    // Здесь будет ваша логика для админского действия, например, сброс рейтинга
+    console.log("Админское действие выполнено!");
+    // После успешного выполнения действия, инкрементируем refreshRatingList
+    // Это заставит RatingList перезагрузить свои данные
+    setRefreshRatingList(prev => prev + 1);
+  };
+
 
   const handleUpdateRating = async () => {
   if (!selectedUserId || score === undefined || score === null) {
@@ -87,7 +97,44 @@ function AdminRatingPage({ user }) { // Предполагается, что use
         </button>
       </div>
 
-      {/* Дополнительные функции админки, если нужны */}
+      <div style={{
+        marginBottom: '30px',
+        padding: '20px',
+        border: '1px solid #ddd',
+        borderRadius: '8px',
+        backgroundColor: '#f9f9f9'
+      }}>
+        <h2 style={{ color: '#555', marginBottom: '15px' }}>Инструменты Администратора</h2>
+        <p style={{ marginBottom: '15px' }}>Здесь будут ваши формы и кнопки для управления рейтингом:</p>
+        <button
+          onClick={handleAdminAction}
+          style={{
+            padding: '10px 15px',
+            backgroundColor: '#007bff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer',
+            fontSize: '16px',
+            marginRight: '10px'
+          }}
+        >
+          Выполнить админское действие (обновить/сбросить)
+        </button>
+        {/* Другие кнопки или формы для управления рейтингом */}
+        <p style={{ marginTop: '15px', fontSize: '0.9em', color: '#777' }}>
+          Например: добавление/удаление пользователей из рейтинга, изменение очков.
+        </p>
+      </div>
+
+      <hr style={{ margin: '30px 0', borderColor: '#eee' }} />
+
+      {/* Отображаемый список рейтинга для админов */}
+      {/* Передаем title и refreshTrigger */}
+      <RatingList
+        title="Текущий Рейтинг Пользователей"
+        refreshTrigger={[refreshRatingList]}
+      />
     </div>
   );
 }
