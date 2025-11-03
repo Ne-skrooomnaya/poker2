@@ -1,201 +1,240 @@
 // client/src/components/rating/AdminRatingPage.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import RatingList from './RatingList'; // Путь к RatingList
+import useTelegram from '../../../../client/src/hooks/useTelegram';
+// import RatingList from './RatingList'; // Если RatingList используется для отображения, убедитесь, что он импортирован
 
-const BACKEND_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+const AdminRatingPage = () => {
+    const { user, token } = useTelegram();
+    const [ratings, setRatings] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [editMode, setEditMode] = useState(null); // { _id: '...', playerName: '...', wins: 0, losses: 0, score: 0 }
+    const [editFormData, setEditFormData] = useState({});
 
-function AdminRatingPage() {
-  const [refreshRatingList, setRefreshRatingList] = useState(0); // Для обновления списка рейтинга
-  const [usersForDeletion, setUsersForDeletion] = useState([]); // Список пользователей для выпадающего списка
-  const [selectedRatingId, setSelectedRatingId] = useState(''); // ID выбранной записи рейтинга для удаления
+    // НОВЫЕ СОСТОЯНИЯ для добавления игрока
+    const [newPlayerName, setNewPlayerName] = useState('');
+    const [addPlayerError, setAddPlayerError] = useState('');
+    const [addPlayerSuccess, setAddPlayerSuccess] = useState('');
 
-  const [deleteLoading, setDeleteLoading] = useState(false);
-  const [deleteError, setDeleteError] = useState(null);
-  const [deleteSuccess, setDeleteSuccess] = useState(null);
 
-  const [adminActionLoading, setAdminActionLoading] = useState(false);
-  const [adminActionError, setAdminActionError] = useState(null);
-  const [adminActionSuccess, setAdminActionSuccess] = useState(null);
+    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
-  // --- Загрузка пользователей для выпадающего списка ---
-  useEffect(() => {
-    const fetchUsersForDeletion = async () => {
-      try {
-        const response = await axios.get(`${BACKEND_URL}/rating`);
-        setUsersForDeletion(response.data);
-        console.log("Пользователи для удаления (rating documents):", response.data); // Дебаг
-      } catch (err) {
-        console.error("Ошибка при загрузке пользователей для удаления:", err);
-      }
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
     };
 
-    fetchUsersForDeletion();
-  }, [refreshRatingList]); // Перезагружаем список для удаления, если рейтинг обновился
+    const fetchRatings = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await axios.get(`${API_URL}/rating`, config);
+            setRatings(response.data);
+        } catch (err) {
+            console.error('Ошибка при загрузке рейтинга:', err);
+            setError('Не удалось загрузить рейтинг.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
-  // --- Обработчик изменения выбора в выпадающем списке ---
-  const handleUserSelectChange = (e) => {
-    setSelectedRatingId(e.target.value);
-    setDeleteError(null);
-    setDeleteSuccess(null);
-  };
+    useEffect(() => {
+        if (user && user.isAdmin) {
+            fetchRatings();
+        }
+    }, [user, token]); // Зависимости для useEffect
 
-  // --- Обработчик удаления пользователя ---
-  const handleDeleteUser = async () => {
-    if (!selectedRatingId) {
-      alert("Пожалуйста, выберите пользователя для удаления.");
-      return;
+    const handleEditClick = (ratingEntry) => {
+        setEditMode(ratingEntry._id);
+        setEditFormData({
+            playerName: ratingEntry.playerName,
+            wins: ratingEntry.wins,
+            losses: ratingEntry.losses,
+            score: ratingEntry.score
+        });
+    };
+
+    const handleEditFormChange = (e) => {
+        const { name, value } = e.target;
+        setEditFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleSaveEdit = async (id) => {
+        try {
+            await axios.put(`${API_URL}/admin/rating/${id}`, editFormData, config);
+            setEditMode(null);
+            fetchRatings(); // Перезагружаем рейтинг для отображения обновленных данных
+        } catch (err) {
+            console.error('Ошибка при обновлении записи рейтинга:', err);
+            setError('Не удалось обновить запись.');
+        }
+    };
+
+    const handleDeleteRating = async (id) => {
+        if (window.confirm('Вы уверены, что хотите удалить эту запись рейтинга?')) {
+            try {
+                await axios.delete(`${API_URL}/admin/rating/${id}`, config);
+                fetchRatings(); // Перезагружаем рейтинг для отображения обновленных данных
+            } catch (err) {
+                console.error('Ошибка при удалении записи рейтинга:', err);
+                setError('Не удалось удалить запись.');
+            }
+        }
+    };
+
+    // НОВАЯ ФУНКЦИЯ: Обработчик добавления нового игрока
+    const handleAddPlayer = async (e) => {
+        e.preventDefault(); // Предотвращаем стандартную отправку формы
+        setAddPlayerError(''); // Очищаем предыдущие ошибки
+        setAddPlayerSuccess(''); // Очищаем предыдущие сообщения об успехе
+
+        if (!newPlayerName.trim()) {
+            setAddPlayerError('Имя игрока не может быть пустым.');
+            return;
+        }
+
+        try {
+            const response = await axios.post(`${API_URL}/admin/rating/add`, { playerName: newPlayerName }, config);
+            setAddPlayerSuccess(response.data.message);
+            setNewPlayerName(''); // Очищаем поле ввода
+            fetchRatings(); // Перезагружаем список рейтинга, чтобы включить нового игрока
+        } catch (err) {
+            console.error('Ошибка при добавлении игрока:', err);
+            if (err.response && err.response.data && err.response.data.message) {
+                setAddPlayerError(err.response.data.message);
+            } else {
+                setAddPlayerError('Не удалось добавить игрока. Попробуйте снова.');
+            }
+        }
+    };
+
+
+    if (!user || !user.isAdmin) {
+        return <p>У вас нет прав доступа к этой странице.</p>;
     }
 
-    if (!window.confirm(`Вы уверены, что хотите удалить запись рейтинга с ID: ${selectedRatingId}?`)) {
-      return;
+    if (loading) {
+        return <p>Загрузка рейтинга...</p>;
     }
 
-    setDeleteLoading(true);
-    setDeleteError(null);
-    setDeleteSuccess(null);
-
-    try {
-      console.log("Отправка DELETE запроса для ratingId:", selectedRatingId); // Дебаг
-      // Используем selectedRatingId, который является _id документа рейтинга
-      await axios.delete(`${BACKEND_URL}/rating/${selectedRatingId}`);
-      setDeleteSuccess("Пользователь успешно удален из рейтинга.");
-      setSelectedRatingId(''); // Сбросить выбор
-      setRefreshRatingList(prev => prev + 1); // Обновить рейтинг и список для выбора
-    } catch (err) {
-      console.error("Ошибка при удалении пользователя:", err);
-      const errorMessage = err.response && err.response.data && err.response.data.message
-        ? err.response.data.message
-        : "Не удалось удалить пользователя. Возможно, такой записи нет или произошла ошибка на сервере.";
-      setDeleteError(errorMessage);
-    } finally {
-      setDeleteLoading(false);
+    if (error) {
+        return <p className="error-message">{error}</p>;
     }
-  };
 
-  // --- НОВАЯ ФУНКЦИЯ: Обновить список (просто перезагружает RatingList) ---
-  const handleRefreshList = () => {
-    setDeleteSuccess(null); // Сброс сообщений при обновлении
-    setDeleteError(null);
-    setRefreshRatingList(prev => prev + 1); // Принудительно обновить RatingList
-    console.log("Список рейтинга обновлен!");
-  };
+    return (
+        <div className="admin-rating-page">
+            <h1>Администрирование Рейтинга</h1>
 
-  return (
-    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-      <h1 style={{ color: '#333', marginBottom: '20px' }}>Управление Рейтингом (Админка)</h1>
+            {/* НОВАЯ СЕКЦИЯ: Добавление нового игрока */}
+            <div className="add-player-section" style={{ marginBottom: '30px', padding: '15px', border: '1px solid #ccc', borderRadius: '8px', backgroundColor: '#f9f9f9' }}>
+                <h3>Добавить нового игрока в рейтинг</h3>
+                <form onSubmit={handleAddPlayer}>
+                    <input
+                        type="text"
+                        placeholder="Имя нового игрока"
+                        value={newPlayerName}
+                        onChange={(e) => setNewPlayerName(e.target.value)}
+                        style={{ padding: '8px', marginRight: '10px', border: '1px solid #ddd', borderRadius: '4px', width: '200px' }}
+                    />
+                    <button type="submit" style={{ padding: '8px 15px', backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+                        Добавить игрока
+                    </button>
+                </form>
+                {addPlayerError && <p style={{ color: 'red', marginTop: '10px' }}>{addPlayerError}</p>}
+                {addPlayerSuccess && <p style={{ color: 'green', marginTop: '10px' }}>{addPlayerSuccess}</p>}
+            </div>
 
-      {/* Секция для управления рейтингом */}
-      <div style={{
-        marginBottom: '30px',
-        padding: '20px',
-        border: '1px solid #ddd',
-        borderRadius: '8px',
-        backgroundColor: '#f9f9f9'
-      }}>
-        <h2 style={{ color: '#555', marginBottom: '15px' }}>Инструменты Администратора</h2>
-
-          {/* Кнопка "Обновить Список" */}
-        <p style={{ marginBottom: '15px' }}>Нажмите, чтобы принудительно обновить отображаемый список рейтинга:</p>
-        <button
-          onClick={handleRefreshList} // Новая функция
-          style={{
-            padding: '10px 15px',
-            backgroundColor: '#28a745', // Зеленый цвет для обновления
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            fontSize: '16px',
-            marginRight: '10px',
-            marginBottom: '20px'
-          }}
-        >
-          Обновить Список
-        </button>
-
-        <hr style={{ margin: '20px 0', borderColor: '#eee' }} />
-
-        {/* Секция для ДОБАВЛЕНИЯ ИГРОКОВ (заглушка для будущей реализации) */}
-        <h3 style={{ color: '#555', marginBottom: '15px' }}>Добавить нового игрока в рейтинг</h3>
-        <p style={{ marginBottom: '15px', fontSize: '0.9em', color: '#777' }}>
-            Здесь будет форма для добавления новых игроков в рейтинг (например, поля для Username, Score, Telegram ID).
-        </p>
-        <button
-          disabled // Пока кнопка неактивна, так как функционал не реализован
-          style={{
-            padding: '10px 15px',
-            backgroundColor: '#6c757d',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'not-allowed',
-            fontSize: '16px',
-            marginBottom: '20px'
-          }}
-        >
-          Добавить Игрока (в разработке)
-        </button>
-        <hr style={{ margin: '20px 0', borderColor: '#eee' }} />
-        {/* Форма для удаления игрока */}
-        <h3 style={{ color: '#555', marginBottom: '15px' }}>Удалить игрока из рейтинга</h3>
-        <select
-          value={selectedRatingId}
-          onChange={handleUserSelectChange}
-          disabled={deleteLoading || !usersForDeletion.length}
-          style={{
-            padding: '10px',
-            borderRadius: '5px',
-            border: '1px solid #ccc',
-            marginRight: '10px',
-            width: '250px',
-            marginBottom: '10px'
-          }}
->
-          <option value="">-- Выберите пользователя --</option>
-          {usersForDeletion.length > 0 ? (
-            usersForDeletion.map(item => ( // item - это документ рейтинга
-              <option key={item._id} value={item._id}>
-                {item.username || item.firstName || `ID: ${item._id}`}
-              </option>
-            ))
-          ) : (
-            <option value="" disabled>Нет пользователей в рейтинге</option>
-          )}
-        </select>
-        <button
-          onClick={handleDeleteUser}
-          disabled={!selectedRatingId || deleteLoading}
-          style={{
-            padding: '10px 15px',
-            backgroundColor: '#dc3545',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            fontSize: '16px',
-            opacity: (!selectedRatingId || deleteLoading) ? 0.6 : 1
-          }}
-        >
-          {deleteLoading ? 'Удаление...' : 'Удалить игрока'}
-        </button>
-
-        {/* Сообщения об операции удаления */}
-        {deleteLoading && <p style={{ color: '#007bff', marginTop: '10px' }}>Удаление пользователя...</p>}
-        {deleteError && <p style={{ color: 'red', marginTop: '10px', fontWeight: 'bold' }}>{deleteError}</p>}
-        {deleteSuccess && <p style={{ color: 'green', marginTop: '10px', fontWeight: 'bold' }}>{deleteSuccess}</p>}
-
-      </div>
-
-      <hr style={{ margin: '30px 0', borderColor: '#eee' }} />
-
-      {/* Отображаемый список рейтинга для админов */}
-      <RatingList
-        title="Текущий Рейтинг Пользователей"
-        refreshKey={refreshRatingList}
-      />
-    </div>
-  );
-}
+            {/* Существующая таблица для отображения и редактирования рейтинга */}
+            {ratings.length > 0 ? (
+                <table className="rating-table" style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
+                    <thead>
+                        <tr>
+                            <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Имя игрока</th>
+                            <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Победы</th>
+                            <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Поражения</th>
+                            <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Очки</th>
+                            <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {ratings.map((ratingEntry) => (
+                            <tr key={ratingEntry._id}>
+                                <td style={{ border: '1px solid #ddd', padding: '8px' }}>
+                                    {editMode === ratingEntry._id ? (
+                                        <input
+                                            type="text"
+                                            name="playerName"
+                                            value={editFormData.playerName}
+                                            onChange={handleEditFormChange}
+                                            style={{ width: '100%', padding: '5px' }}
+                                        />
+                                    ) : (
+                                        ratingEntry.playerName
+                                    )}
+                                </td>
+                                <td style={{ border: '1px solid #ddd', padding: '8px' }}>
+                                    {editMode === ratingEntry._id ? (
+                                        <input
+                                            type="number"
+                                            name="wins"
+                                            value={editFormData.wins}
+                                            onChange={handleEditFormChange}
+                                            style={{ width: '60px', padding: '5px' }}
+                                        />
+                                    ) : (
+                                        ratingEntry.wins
+                                    )}
+                                </td>
+                                <td style={{ border: '1px solid #ddd', padding: '8px' }}>
+                                    {editMode === ratingEntry._id ? (
+                                        <input
+                                            type="number"
+                                            name="losses"
+                                            value={editFormData.losses}
+                                            onChange={handleEditFormChange}
+                                            style={{ width: '60px', padding: '5px' }}
+                                        />
+                                    ) : (
+                                        ratingEntry.losses
+                                    )}
+                                </td>
+                                <td style={{ border: '1px solid #ddd', padding: '8px' }}>
+                                    {editMode === ratingEntry._id ? (
+                                        <input
+                                            type="number"
+                                            name="score"
+                                            value={editFormData.score}
+                                            onChange={handleEditFormChange}
+                                            style={{ width: '60px', padding: '5px' }}
+                                        />
+                                    ) : (
+                                        ratingEntry.score
+                                    )}
+                                </td>
+                                <td style={{ border: '1px solid #ddd', padding: '8px' }}>
+                                    {editMode === ratingEntry._id ? (
+                                        <>
+                                            <button onClick={() => handleSaveEdit(ratingEntry._id)} style={{ marginRight: '5px', padding: '5px 10px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Сохранить</button>
+                                            <button onClick={() => setEditMode(null)} style={{ padding: '5px 10px', backgroundColor: '#6c757d', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Отмена</button>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <button onClick={() => handleEditClick(ratingEntry)} style={{ marginRight: '5px', padding: '5px 10px', backgroundColor: '#ffc107', color: 'black', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Редактировать</button>
+                                            <button onClick={() => handleDeleteRating(ratingEntry._id)} style={{ padding: '5px 10px', backgroundColor: '#dc3545', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Удалить</button>
+                                        </>
+                                    )}
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            ) : (
+                <p>В рейтинге пока нет игроков.</p>
+            )}
+        </div>
+    );
+};
 
 export default AdminRatingPage;
