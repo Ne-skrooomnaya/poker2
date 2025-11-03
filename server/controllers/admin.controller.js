@@ -1,4 +1,21 @@
     // server/controllers/admin.controller.js (пример)
+const Rating = require('../models/rating.model');
+
+// --- НОВАЯ ФУНКЦИЯ: Сброс всех очков рейтинга ---
+exports.resetRating = async (req, res) => {
+    try {
+        // Обновляем все документы в коллекции Rating, устанавливая score в 0
+        const result = await Rating.updateMany({}, { score: 0 });
+
+        res.status(200).json({
+            message: 'Рейтинг успешно сброшен. Все очки установлены в 0.',
+            modifiedCount: result.modifiedCount
+        });
+    } catch (error) {
+        console.error('Ошибка при сбросе рейтинга:', error);
+        res.status(500).json({ message: 'Ошибка сервера при сбросе рейтинга.', error });
+    }
+};
 
     const adminController = {
       getDashboard: (req, res) => {

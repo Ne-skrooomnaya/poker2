@@ -3,13 +3,13 @@ const express = require('express');
 const router = express.Router();
 const Rating = require('../models/rating.model');
 const User = require('../models/user.model');
-const { getAllRatings } = require('../controllers/rating.controller');
+const { getAllRatings, deleteRating } = require('../controllers/rating.controller');
 
 const mongoose = require('mongoose');
 // GET /rating - Получить список рейтингов
 // GET /api/rating - Получить все записи рейтинга
 router.get('/', getAllRatings);
-
+router.delete('/:id', deleteRating);
 router.get('/', async (req, res) => {
   try {
     // Получаем все записи рейтинга, сортируем по убыванию счета
