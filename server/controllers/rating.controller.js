@@ -4,23 +4,23 @@ const User = require('../models/user.model');
 
 exports.getAllRatings = async (req, res) => {
   try {
-    // Находим все записи рейтинга, сортируя по score
     const ratings = await Rating.find({})
       .sort({ score: -1 })
       .lean();
 
-    // Создаем карту пользователей для быстрого поиска по telegramId
-    // Это более эффективно, чем делать findOne в цикле для каждой записи рейтинга
     const usersMap = new Map();
-    const allUsers = await User.find({}).lean(); // Получаем всех пользователей
+    const allUsers = await User.find({}).lean();
     allUsers.forEach(user => {
-      if (user.telegramId) { // Убеждаемся, что у пользователя есть telegramId
+      if (user.telegramId) {
         usersMap.set(user.telegramId, user);
       }
     });
 
     const ratingsWithUsernames = ratings.map(rating => {
-      const user = usersMap.get(rating.telegramId); // Ищем пользователя по telegramId из рейтинга
+      const user = usersMap.get(rating.telegramId);
+      // Добавляем логирование здесь, чтобы увидеть, найден ли пользователь
+      console.log(`Rating Telegram ID: ${rating.telegramId}, User Found: ${!!user}, Username: ${user ? user.username : 'N/A'}`);
+
       return {
         _id: rating._id,
         telegramId: rating.telegramId,
@@ -31,6 +31,9 @@ exports.getAllRatings = async (req, res) => {
         username: user ? user.username : 'Неизвестный',
       };
     });
+
+    // Логируем финальный массив, который отправляется на фронтенд
+    console.log("Final ratings sent to frontend:", ratingsWithUsernames);
 
     res.status(200).json(ratingsWithUsernames);
 
