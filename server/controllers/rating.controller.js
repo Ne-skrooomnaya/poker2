@@ -4,19 +4,23 @@ const User = require('../models/user.model');
 
 exports.getAllRatings = async (req, res) => {
   try {
-    // Получаем все записи рейтинга
-    // Сортируем по убыванию очков
-    // В модели Rating у нас поле telegramId, а не userId.
-    // Нам нужно найти пользователя по telegramId из записи рейтинга.
-
     // Находим все записи рейтинга, сортируя по score
     const ratings = await Rating.find({})
       .sort({ score: -1 })
-      .lean(); // lean() для получения чистых объектов JS, без Mongoose-документов (ускоряет)
+      .lean();
 
-    // Теперь для каждой записи рейтинга находим пользователя по telegramId
-    const ratingsWithUsernames = await Promise.all(ratings.map(async (rating) => {
-      const user = await User.findOne({ telegramId: rating.telegramId });
+    // Создаем карту пользователей для быстрого поиска по telegramId
+    // Это более эффективно, чем делать findOne в цикле для каждой записи рейтинга
+    const usersMap = new Map();
+    const allUsers = await User.find({}).lean(); // Получаем всех пользователей
+    allUsers.forEach(user => {
+      if (user.telegramId) { // Убеждаемся, что у пользователя есть telegramId
+        usersMap.set(user.telegramId, user);
+      }
+    });
+
+    const ratingsWithUsernames = ratings.map(rating => {
+      const user = usersMap.get(rating.telegramId); // Ищем пользователя по telegramId из рейтинга
       return {
         _id: rating._id,
         telegramId: rating.telegramId,
@@ -26,7 +30,7 @@ exports.getAllRatings = async (req, res) => {
         lastName: user ? user.lastName : '',
         username: user ? user.username : 'Неизвестный',
       };
-    }));
+    });
 
     res.status(200).json(ratingsWithUsernames);
 
@@ -35,4 +39,3 @@ exports.getAllRatings = async (req, res) => {
     res.status(500).json({ message: 'Ошибка сервера при получении рейтинга.' });
   }
 };
-
