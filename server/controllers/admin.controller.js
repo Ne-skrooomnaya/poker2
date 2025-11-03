@@ -1,7 +1,7 @@
     // server/controllers/admin.controller.js (пример)
-
+const Rating = require('../models/rating.model'); // Убедитесь, что эта строка уже есть или добавьте ее
    // Добавление пользователя в рейтинг
-exports.addUserToRating = async (req, res) => {
+const addUserToRating = async (req, res) => {
     try {
         let { telegramId, score } = req.body;
 
@@ -78,4 +78,31 @@ exports.addUserToRating = async (req, res) => {
             // errorDetails: error // Если хотите передать полный объект ошибки (не рекомендуется для продакшена)
         });
     }
+};
+
+// --- НОВЫЙ ФУНКЦИОНАЛ: Удаление пользователя из рейтинга ---
+const deleteRating = async (req, res) => {
+    try {
+        const { telegramId } = req.params; // Получаем telegramId из параметров URL
+
+        if (!telegramId) {
+            return res.status(400).json({ message: 'Telegram ID пользователя обязателен для удаления.' });
+        }
+
+        const deletedRating = await Rating.findOneAndDelete({ telegramId });
+
+        if (!deletedRating) {
+            return res.status(404).json({ message: 'Запись рейтинга для указанного пользователя не найдена.' });
+        }
+
+        res.status(200).json({ message: 'Пользователь успешно удален из рейтинга.', deletedRating });
+    } catch (error) {
+        console.error('Ошибка при удалении пользователя из рейтинга:', error);
+        res.status(500).json({ message: 'Ошибка сервера при удалении записи рейтинга.', error: error.message });
+    }
+};
+
+module.exports = {
+    addUserToRating,
+    deleteRating // <--- Добавьте эту строку
 };
