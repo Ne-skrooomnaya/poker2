@@ -3,8 +3,6 @@ const Rating = require('../models/rating.model');
 
 // --- НОВАЯ ФУНКЦИЯ: Сброс всех очков рейтинга ---
     // server/controllers/admin.controller.js
-    const Rating = require('../models/rating.model');
-
     // --- НОВАЯ ФУНКЦИЯ: Сброс всех очков рейтинга ---
     exports.resetRating = async (req, res) => { // <-- Убедитесь, что эта строка exports.resetRating
         try {
