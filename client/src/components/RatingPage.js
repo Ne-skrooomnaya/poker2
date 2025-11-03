@@ -25,4 +25,3 @@ const RatingPage = ({ user }) => { // Принимаем user как пропс
 };
 
 export default RatingPage;
-
