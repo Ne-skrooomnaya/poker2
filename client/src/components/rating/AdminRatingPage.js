@@ -93,7 +93,7 @@ function AdminRatingPage({ user }) { // Предполагается, что use
         />
 
         <button onClick={handleUpdateRating} style={{ padding: '8px 15px' }}>
-          Обновить Рейтинг
+          добавить в рейтинг
         </button>
       </div>
 
