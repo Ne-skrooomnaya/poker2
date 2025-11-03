@@ -20,6 +20,7 @@ exports.addUserToRating = async (req, res) => {
         // if (parsedScore < 0) {
         //     return res.status(400).json({ error: 'Score cannot be negative.' });
         // }
+          console.log('Received in addUserToRating:', { telegramId, username, score });
 
         // 2. Проверяем, существует ли пользователь с таким telegramId в коллекции users
         const existingUser = await User.findOne({ telegramId });
