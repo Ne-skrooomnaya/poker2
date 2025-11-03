@@ -73,27 +73,12 @@ function AdminRatingPage() {
     }
   };
 
-  // --- Обработчик админского действия (СБРОС РЕЙТИНГА) ---
-  const handleResetRating = async () => {
-    setAdminActionLoading(true);
-    setAdminActionError(null);
-    setAdminActionSuccess(null);
-
-    try {
-      // Отправляем POST запрос на новый эндпоинт для сброса рейтинга
-      const response = await axios.post(`${BACKEND_URL}/admin/resetRating`); // Используем '/admin/resetRating'
-      console.log("Рейтинг сброшен:", response.data);
-      setAdminActionSuccess("Рейтинг успешно сброшен. Все очки установлены в 0.");
-      setRefreshRatingList(prev => prev + 1); // Обновить рейтинг после успешного действия
-    } catch (err) {
-      console.error("Ошибка при сбросе рейтинга:", err);
-      const errorMessage = err.response && err.response.data && err.response.data.message
-        ? err.response.data.message
-        : "Не удалось сбросить рейтинг.";
-      setAdminActionError(errorMessage);
-    } finally {
-      setAdminActionLoading(false);
-    }
+  // --- НОВАЯ ФУНКЦИЯ: Обновить список (просто перезагружает RatingList) ---
+  const handleRefreshList = () => {
+    setDeleteSuccess(null); // Сброс сообщений при обновлении
+    setDeleteError(null);
+    setRefreshRatingList(prev => prev + 1); // Принудительно обновить RatingList
+    console.log("Список рейтинга обновлен!");
   };
 
   return (
@@ -110,34 +95,48 @@ function AdminRatingPage() {
       }}>
         <h2 style={{ color: '#555', marginBottom: '15px' }}>Инструменты Администратора</h2>
 
-        {/* Кнопка для сброса рейтинга */}
-        <p style={{ marginBottom: '15px' }}>Сбросить все очки рейтинга до 0:</p>
+          {/* Кнопка "Обновить Список" */}
+        <p style={{ marginBottom: '15px' }}>Нажмите, чтобы принудительно обновить отображаемый список рейтинга:</p>
         <button
-          onClick={handleResetRating} // Изменено на handleResetRating
-          disabled={adminActionLoading}
+          onClick={handleRefreshList} // Новая функция
           style={{
             padding: '10px 15px',
-            backgroundColor: '#007bff',
+            backgroundColor: '#28a745', // Зеленый цвет для обновления
             color: 'white',
             border: 'none',
             borderRadius: '5px',
             cursor: 'pointer',
             fontSize: '16px',
             marginRight: '10px',
-            marginBottom: '20px',
-            opacity: adminActionLoading ? 0.6 : 1
+            marginBottom: '20px'
           }}
         >
-          {adminActionLoading ? 'Сброс...' : 'Сбросить Рейтинг'}
+          Обновить Список
         </button>
-
-        {/* Сообщения об админском действии */}
-        {adminActionLoading && <p style={{ color: '#007bff', marginTop: '10px' }}>Выполнение действия...</p>}
-        {adminActionError && <p style={{ color: 'red', marginTop: '10px', fontWeight: 'bold' }}>{adminActionError}</p>}
-        {adminActionSuccess && <p style={{ color: 'green', marginTop: '10px', fontWeight: 'bold' }}>{adminActionSuccess}</p>}
 
         <hr style={{ margin: '20px 0', borderColor: '#eee' }} />
 
+        {/* Секция для ДОБАВЛЕНИЯ ИГРОКОВ (заглушка для будущей реализации) */}
+        <h3 style={{ color: '#555', marginBottom: '15px' }}>Добавить нового игрока в рейтинг</h3>
+        <p style={{ marginBottom: '15px', fontSize: '0.9em', color: '#777' }}>
+            Здесь будет форма для добавления новых игроков в рейтинг (например, поля для Username, Score, Telegram ID).
+        </p>
+        <button
+          disabled // Пока кнопка неактивна, так как функционал не реализован
+          style={{
+            padding: '10px 15px',
+            backgroundColor: '#6c757d',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'not-allowed',
+            fontSize: '16px',
+            marginBottom: '20px'
+          }}
+        >
+          Добавить Игрока (в разработке)
+        </button>
+        <hr style={{ margin: '20px 0', borderColor: '#eee' }} />
         {/* Форма для удаления игрока */}
         <h3 style={{ color: '#555', marginBottom: '15px' }}>Удалить игрока из рейтинга</h3>
         <select
