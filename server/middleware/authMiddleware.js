@@ -1,53 +1,39 @@
-const jwt = require('jsonwebtoken');
-// const User = require('../models/User'); // Если вы хотите загрузить пользователя полностью, а не только ID
+    // server/middleware/authMiddleware.js (или создайте новый файл, например, adminAuthMiddleware.js)
 
-module.exports = (req, res, next) => {
-    try {
-        const authHeader = req.get('Authorization'); // Более надежный способ получения заголовка
+    const jwt = require('jsonwebtoken'); // Предполагаем, что вы используете JWT для аутентификации
+    const User = require('../models/user.model'); // Импортируйте вашу модель пользователя
 
-        if (!authHeader) {
-            return res.status(401).json({ message: 'Отсутствует заголовок авторизации.' });
+    // Middleware для общей аутентификации (проверяет, что пользователь зарегистрирован)
+    const authenticateUser = async (req, res, next) => {
+      const token = req.headers.authorization?.split(' ')[1]; // Предполагаем, что токен передается в заголовке Authorization
+
+      if (!token) {
+        return res.status(401).json({ message: 'Authentication token is required' });
+      }
+
+      try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET); // Замените 'process.env.JWT_SECRET' на ваш секретный ключ
+        req.user = await User.findById(decoded.id).select('-password'); // Получаем пользователя из БД
+        if (!req.user) {
+          return res.status(404).json({ message: 'User not found' });
         }
+        next();
+      } catch (error) {
+        console.error('Authentication error:', error);
+        return res.status(401).json({ message: 'Invalid token' });
+      }
+    };
 
-        const token = authHeader.split(' ')[1]; // Извлекаем токен после "Bearer "
+    // Middleware для проверки роли администратора
+    const authorizeAdmin = async (req, res, next) => {
+      // Предполагаем, что req.user уже установлен предыдущим middleware (authenticateUser)
+      if (!req.user || req.user.role !== 'admin') {
+        return res.status(403).json({ message: 'Access denied. Admins only.' });
+      }
+      next();
+    };
 
-        if (!token) {
-            return res.status(401).json({ message: 'Токен авторизации не найден.' });
-        }
-
-        const decodedToken = jwt.verify(token, process.env.JWT_SECRET); // Используем переменную окружения
-
-        // decodedToken содержит данные, которые были помещены в токен при его создании
-        // Обычно это { userId: ... }
-        req.user = {
-            id: decodedToken.userId,
-            // role: decodedToken.role // Если роль хранится в токене
-        };
-
-        // Если нужно загрузить полного пользователя из БД (менее распространенный подход для middleware):
-        // User.findById(decodedToken.userId)
-        //     .then(user => {
-        //         if (!user) {
-        //             return res.status(401).json({ message: 'Пользователь не найден (токен действителен, но пользователь удален).' });
-        //         }
-        //         req.user = user; // Можно передать всего пользователя, если нужно
-        //         next();
-        //     })
-        //     .catch(err => {
-        //         console.error("Ошибка при поиске пользователя в middleware:", err);
-        //         res.status(500).json({ message: 'Ошибка сервера при аутентификации.' });
-        //     });
-
-        next(); // Передаем управление дальше
-
-    } catch (error) {
-        let errorMessage = 'Ошибка аутентификации.';
-        if (error.name === 'TokenExpiredError') {
-            errorMessage = 'Срок действия токена истек. Пожалуйста, войдите снова.';
-        } else if (error.name === 'JsonWebTokenError') {
-            errorMessage = 'Неверный токен.';
-        }
-        console.error("Ошибка в authMiddleware:", error.message);
-        res.status(401).json({ message: errorMessage, error: error.message });
-    }
-};
+    module.exports = {
+      authenticateUser,
+      authorizeAdmin,
+    };

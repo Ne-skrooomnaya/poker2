@@ -5,7 +5,6 @@
     let tg = window.Telegram ? window.Telegram.WebApp : undefined;
 
     const BACKEND_URL = process.env.REACT_APP_API_URL;
-    
 function useTelegram() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
