@@ -32,7 +32,7 @@ router.post('/update-rating', async (req, res) => {
 
     // 3. Используем findOneAndUpdate с upsert: true для создания/обновления записи рейтинга по telegramId
     const updatedRating = await Rating.findOneAndUpdate(
-      { telegramId: telegramIdToUse }, // Критерий поиска: по telegramId
+      { telegramId: telegramIdToUse, userId: userId }, // Критерий поиска: по telegramId
       { score: score },                 // Данные для обновления
       {
         new: true,
