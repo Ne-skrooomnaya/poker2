@@ -20,12 +20,12 @@ function AdminRatingPage() {
                 const config = { headers: { Authorization: `Bearer ${token}` } };
 
                 // Загрузка всех пользователей (для выбора как в добавлении, так и в удалении)
-                const usersRes = await axios.get('/users', config);
+                const usersRes = await axios.get('/api/users', config);
                 setAllUsers(usersRes.data);
 
                 // Загрузка текущего рейтинга
                 // Используем /api/ratings, который должен возвращать весь рейтинг (для админа)
-                const ratingsRes = await axios.get('/ratings', config);
+                const ratingsRes = await axios.get('/api/ratings', config);
                 setRatings(ratingsRes.data);
 
             } catch (error) {
