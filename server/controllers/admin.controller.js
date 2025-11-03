@@ -3,7 +3,7 @@
    // Добавление пользователя в рейтинг
 exports.addUserToRating = async (req, res) => {
     try {
-        let { telegramId, score } = req.body; // Используем let, чтобы можно было изменить
+        let { telegramId, score } = req.body;
 
         // --- ПРЕОБРАЗОВАНИЕ И ПРОВЕРКА ВХОДНЫХ ДАННЫХ ---
 
@@ -15,16 +15,28 @@ exports.addUserToRating = async (req, res) => {
 
         // Убедимся, что telegramId - это строка, и очистим его от лишних пробелов
         telegramId = String(telegramId).trim();
-        if (!telegramId) {
-            return res.status(400).json({ message: "Telegram ID не может быть пустым" });
-        }
 
-        // --- КОНЕЦ ПРЕОБРАЗОВАНИЯ И ПРОВЕРКИ ---
+        // --- ОСОБОЕ ВНИМАНИЕ ЗДЕСЬ ---
+        // Проверяем, что telegramId НЕ пустой. Если он пустой, это вызовет DuplicateKeyError,
+        // если есть запись с userId: null.
+        if (!telegramId) {
+            // Вместо того, чтобы просто вернуть ошибку, давайте проверим, есть ли уже запись с null userId.
+            // Если есть, то мы не будем создавать новую, но и не будем обновлять (так как нет id для обновления).
+            // Лучше всего, чтобы админка не позволяла отправлять пустой telegramId.
+            // Но для защиты бэкенда:
+            const nullIdRating = await Rating.findOne({ telegramId: null }); // Или { userId: null }, если индекс действительно на userId
+            if (nullIdRating) {
+                 return res.status(400).json({ message: "Невозможно добавить нового пользователя с пустым Telegram ID, так как такая запись уже существует." });
+            } else {
+                 // Если нет записи с null, и telegramId пустой, это новая ситуация,
+                 // но мы не можем создать запись без Telegram ID.
+                 return res.status(400).json({ message: "Telegram ID не может быть пустым для добавления нового пользователя." });
+            }
+        }
+        // --- КОНЕЦ ОСОБОГО ВНИМАНИЯ ---
+
 
         // Ищем пользователя по telegramId
-        // Важно: Если в базе telegramId может быть, например, числом, а приходит строкой,
-        // то нужно убедиться, что и поиск, и данные в базе сопоставимы.
-        // Судя по скриншотам, telegramId в базе - строка, поэтому String(telegramId).trim() должен работать.
         const user = await User.findOne({ telegramId: telegramId });
 
         if (!user) {
@@ -33,7 +45,12 @@ exports.addUserToRating = async (req, res) => {
         }
 
         // Проверяем, есть ли уже запись в рейтинге для этого пользователя
-        const existingRating = await Rating.findOne({ telegramId: telegramId }); // Ищем по такому же telegramId
+        // **ВАЖНО:** Убедитесь, что поле, по которому вы ищете, соответствует полю в индексе MongoDB.
+        // Если индекс называется `userId_1`, а поле в модели `telegramId`, то здесь должно быть:
+        // const existingRating = await Rating.findOne({ userId: telegramId });
+        // Но исходя из вашей модели, скорее всего, он должен быть по telegramId:
+        const existingRating = await Rating.findOne({ telegramId: telegramId });
+
 
         if (existingRating) {
             // Если есть, обновляем его score
@@ -54,12 +71,11 @@ exports.addUserToRating = async (req, res) => {
         }
     } catch (error) {
         console.error("Ошибка при добавлении/обновлении рейтинга:", error);
-        // Предоставляем более детальную информацию об ошибке, если это не связано с чувствительными данными
+        // Предоставляем более детальную информацию об ошибке
         res.status(500).json({
             message: "Ошибка сервера при добавлении/обновлении рейтинга",
             error: error.message,
-            // Можно добавить stack trace для отладки, но не в продакшене
-            // stack: error.stack
+            // errorDetails: error // Если хотите передать полный объект ошибки (не рекомендуется для продакшена)
         });
     }
 };
