@@ -10,8 +10,13 @@ function AdminRatingPage({ user }) { // Предполагается, что use
   const [score, setScore] = useState(0);
   const [message, setMessage] = useState('');
  const [refreshRatingList, setRefreshRatingList] = useState(0);
+const [usersForDeletion, setUsersForDeletion] = useState([]); // Список пользователей для выпадающего списка
+  
+ const [deleteLoading, setDeleteLoading] = useState(false);
+  const [deleteError, setDeleteError] = useState(null);
+  const [deleteSuccess, setDeleteSuccess] = useState(null);
 
-  useEffect(() => {
+useEffect(() => {
     const fetchUsers = async () => {
       try {
         // Предполагается, что у вас есть эндпоинт для получения списка всех пользователей
@@ -25,13 +30,66 @@ function AdminRatingPage({ user }) { // Предполагается, что use
     fetchUsers();
   }, []);
 
- const handleAdminAction = () => {
-    // Здесь будет ваша логика для админского действия, например, сброс рейтинга
-    console.log("Админское действие выполнено!");
-    // После успешного выполнения действия, инкрементируем refreshRatingList
-    // Это заставит RatingList перезагрузить свои данные
-    setRefreshRatingList(prev => prev + 1);
+    useEffect(() => {
+    const fetchUsersForDeletion = async () => {
+      try {
+        const response = await axios.get(`${BACKEND_URL}/rating`);
+        setUsersForDeletion(response.data);
+      } catch (err) {
+        console.error("Ошибка при загрузке пользователей для удаления:", err);
+        // Можно установить ошибку, но для выпадающего списка это не критично
+      }
+    };
+
+    fetchUsersForDeletion();
+  }, [refreshRatingList]); // Перезагружаем список для удаления, если рейтинг обновился
+
+const handleUserSelectChange = (e) => {
+    setSelectedUserId(e.target.value);
+    setDeleteError(null); // Сбросить ошибки при изменении выбора
+    setDeleteSuccess(null); // Сбросить сообщения об успехе
   };
+
+  // --- Обработчик удаления пользователя ---
+  const handleDeleteUser = async () => {
+    if (!selectedUserId) {
+      alert("Пожалуйста, выберите пользователя для удаления.");
+      return;
+    }
+
+    // Добавляем подтверждение перед удалением
+    if (!window.confirm("Вы уверены, что хотите удалить этого пользователя из рейтинга?")) {
+      return;
+    }
+
+    setDeleteLoading(true);
+    setDeleteError(null);
+    setDeleteSuccess(null);
+
+    try {
+      // Предполагается, что ваш бэкенд имеет эндпоинт DELETE /rating/:id
+      // где :id - это _id пользователя в записи рейтинга.
+      await axios.delete(`${BACKEND_URL}/rating/${selectedUserId}`);
+      setDeleteSuccess("Пользователь успешно удален из рейтинга.");
+
+      setSelectedUserId(''); // Сбросить выбор
+      setRefreshRatingList(prev => prev + 1); // Обновить рейтинг после успешного удаления
+    } catch (err) {
+      console.error("Ошибка при удалении пользователя:", err);
+      setDeleteError("Не удалось удалить пользователя. Возможно, такой записи нет или произошла ошибка на сервере.");
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
+
+  // --- Пример админского действия (оставлен для демонстрации) ---
+  const handleAdminAction = () => {
+    console.log("Админское действие выполнено!");
+    setRefreshRatingList(prev => prev + 1); // Обновить рейтинг после действия
+    setDeleteSuccess(null); // Сбросить сообщения
+    setDeleteError(null); // Сбросить сообщения
+  };
+
 
 
   const handleUpdateRating = async () => {
@@ -121,6 +179,56 @@ function AdminRatingPage({ user }) { // Предполагается, что use
         >
           Выполнить админское действие (обновить/сбросить)
         </button>
+            <hr style={{ margin: '20px 0', borderColor: '#eee' }} />
+
+        {/* Форма для удаления игрока */}
+        <h3 style={{ color: '#555', marginBottom: '15px' }}>Удалить игрока из рейтинга</h3>
+        <select
+          value={selectedUserId}
+          onChange={handleUserSelectChange}
+          disabled={deleteLoading}
+          style={{
+            padding: '10px',
+            borderRadius: '5px',
+            border: '1px solid #ccc',
+            marginRight: '10px',
+            width: '250px',
+            marginBottom: '10px' // Отступ
+          }}
+        >
+          <option value="">-- Выберите пользователя --</option>
+          {usersForDeletion.length > 0 ? (
+            usersForDeletion.map(user => (
+              <option key={user._id} value={user._id}>
+                {user.username || user.firstName || `ID: ${user._id}`}
+              </option>
+            ))
+          ) : (
+            <option value="" disabled>Нет пользователей в рейтинге</option>
+          )}
+        </select>
+        <button
+          onClick={handleDeleteUser}
+          disabled={!selectedUserId || deleteLoading}
+          style={{
+            padding: '10px 15px',
+            backgroundColor: '#dc3545', // Красный цвет для кнопки удаления
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer',
+            fontSize: '16px',
+            opacity: (!selectedUserId || deleteLoading) ? 0.6 : 1
+          }}
+        >
+          {deleteLoading ? 'Удаление...' : 'Удалить игрока'}
+        </button>
+
+        {/* Сообщения об операции удаления */}
+        {deleteLoading && <p style={{ color: '#007bff', marginTop: '10px' }}>Удаление пользователя...</p>}
+        {deleteError && <p style={{ color: 'red', marginTop: '10px', fontWeight: 'bold' }}>{deleteError}</p>}
+        {deleteSuccess && <p style={{ color: 'green', marginTop: '10px', fontWeight: 'bold' }}>{deleteSuccess}</p>}
+
         {/* Другие кнопки или формы для управления рейтингом */}
         <p style={{ marginTop: '15px', fontSize: '0.9em', color: '#777' }}>
           Например: добавление/удаление пользователей из рейтинга, изменение очков.
