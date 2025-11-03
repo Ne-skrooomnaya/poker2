@@ -57,4 +57,3 @@ exports.addUserToRating = async (req, res) => {
         res.status(500).json({ error: 'Failed to add user to rating. Please try again later.', details: error.message });
     }
 };
-    module.exports = adminController;
