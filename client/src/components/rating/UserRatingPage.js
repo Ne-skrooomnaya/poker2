@@ -11,25 +11,8 @@ function UserRatingPage({ user }) {
         <RatingList />
       {/* Вставляем компонент RatingList сюда */}
       {/* Заголовок H1 уже есть, поэтому для RatingList можно не указывать title, или указать другой, например "Общий рейтинг" как H2 */}
-      <RatingList />
 
-      {user && user.role === 'admin' && (
-            <button
-              onClick={() => window.location.href = '/admin'}
-              style={{
-                marginTop: '20px',
-                padding: '10px 15px',
-                backgroundColor: '#007bff',
-                color: 'white',
-                border: 'none',
-                borderRadius: '5px',
-                cursor: 'pointer',
-                fontSize: '16px',
-              }}
-            >
-              Перейти в Админку
-            </button>
-          )}
+
         </div>
       );
     }
