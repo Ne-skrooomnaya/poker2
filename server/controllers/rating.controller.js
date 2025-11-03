@@ -2,7 +2,7 @@
 const Rating = require('../models/rating.model');
 const User = require('../models/user.model');
 
-exports.getAllRatings = async (req, res) => {
+const ratingController = async (req, res) => {
   try {
     // Получаем все записи рейтинга
     // Сортируем по убыванию очков
