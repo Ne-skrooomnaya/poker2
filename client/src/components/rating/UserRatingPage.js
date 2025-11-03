@@ -11,7 +11,6 @@ function UserRatingPage({ user }) {
         <RatingList />
       {/* Вставляем компонент RatingList сюда */}
       {/* Заголовок H1 уже есть, поэтому для RatingList можно не указывать title, или указать другой, например "Общий рейтинг" как H2 */}
-      <RatingList />
 
       {user && user.role === 'admin' && (
             <button

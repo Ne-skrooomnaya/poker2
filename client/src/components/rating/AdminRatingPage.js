@@ -93,39 +93,11 @@ function AdminRatingPage({ user }) { // Предполагается, что use
         />
 
         <button onClick={handleUpdateRating} style={{ padding: '8px 15px' }}>
-          добавить в рейтинг
+          добавить в рейтинг или редактировать игрока 
         </button>
       </div>
 
-      <div style={{
-        marginBottom: '30px',
-        padding: '20px',
-        border: '1px solid #ddd',
-        borderRadius: '8px',
-        backgroundColor: '#f9f9f9'
-      }}>
-        <h2 style={{ color: '#555', marginBottom: '15px' }}>Инструменты Администратора</h2>
-        <p style={{ marginBottom: '15px' }}>Здесь будут ваши формы и кнопки для управления рейтингом:</p>
-        <button
-          onClick={handleAdminAction}
-          style={{
-            padding: '10px 15px',
-            backgroundColor: '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            fontSize: '16px',
-            marginRight: '10px'
-          }}
-        >
-          Выполнить админское действие (обновить/сбросить)
-        </button>
-        {/* Другие кнопки или формы для управления рейтингом */}
-        <p style={{ marginTop: '15px', fontSize: '0.9em', color: '#777' }}>
-          Например: добавление/удаление пользователей из рейтинга, изменение очков.
-        </p>
-      </div>
+      
 
       <hr style={{ margin: '30px 0', borderColor: '#eee' }} />
 
@@ -140,3 +112,33 @@ function AdminRatingPage({ user }) { // Предполагается, что use
 }
 
 export default AdminRatingPage;
+
+// {/* <div style={{
+//         marginBottom: '30px',
+//         padding: '20px',
+//         border: '1px solid #ddd',
+//         borderRadius: '8px',
+//         backgroundColor: '#f9f9f9'
+//       }}>
+//         <h2 style={{ color: '#555', marginBottom: '15px' }}>Инструменты Администратора</h2>
+//         <p style={{ marginBottom: '15px' }}>Здесь будут ваши формы и кнопки для управления рейтингом:</p>
+//         <button
+//           onClick={handleAdminAction}
+//           style={{
+//             padding: '10px 15px',
+//             backgroundColor: '#007bff',
+//             color: 'white',
+//             border: 'none',
+//             borderRadius: '5px',
+//             cursor: 'pointer',
+//             fontSize: '16px',
+//             marginRight: '10px'
+//           }}
+//         >
+//           Выполнить админское действие (обновить/сбросить)
+//         </button>
+//         {/* Другие кнопки или формы для управления рейтингом */}
+//         <p style={{ marginTop: '15px', fontSize: '0.9em', color: '#777' }}>
+//           Например: добавление/удаление пользователей из рейтинга, изменение очков.
+//         </p>
+//       </div> */}
