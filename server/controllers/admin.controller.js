@@ -2,22 +2,26 @@
 const Rating = require('../models/rating.model');
 
 // --- НОВАЯ ФУНКЦИЯ: Сброс всех очков рейтинга ---
-exports.resetRating = async (req, res) => {
-    try {
-        // Обновляем все документы в коллекции Rating, устанавливая score в 0
-        const result = await Rating.updateMany({}, { score: 0 });
+    // server/controllers/admin.controller.js
+    const Rating = require('../models/rating.model');
 
-        res.status(200).json({
-            message: 'Рейтинг успешно сброшен. Все очки установлены в 0.',
-            modifiedCount: result.modifiedCount
-        });
-    } catch (error) {
-        console.error('Ошибка при сбросе рейтинга:', error);
-        res.status(500).json({ message: 'Ошибка сервера при сбросе рейтинга.', error });
-    }
-};
+    // --- НОВАЯ ФУНКЦИЯ: Сброс всех очков рейтинга ---
+    exports.resetRating = async (req, res) => { // <-- Убедитесь, что эта строка exports.resetRating
+        try {
+            const result = await Rating.updateMany({}, { score: 0 });
 
-    const adminController = {
+            res.status(200).json({
+                message: 'Рейтинг успешно сброшен. Все очки установлены в 0.',
+                modifiedCount: result.modifiedCount
+            });
+        } catch (error) {
+            console.error('Ошибка при сбросе рейтинга:', error);
+            res.status(500).json({ message: 'Ошибка сервера при сбросе рейтинга.', error });
+        }
+    };
+
+
+exports.adminController = {
       getDashboard: (req, res) => {
         // req.user содержит информацию о текущем аутентифицированном админе
         res.json({
@@ -39,4 +43,3 @@ exports.resetRating = async (req, res) => {
       // },
     };
 
-    module.exports = adminController;

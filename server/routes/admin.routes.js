@@ -5,8 +5,8 @@ const User = require('../models/user.model'); // Нужен для поиска 
 const Rating = require('../models/rating.model');
 const mongoose = require('mongoose'); // Для валидации ObjectId
 const { authenticateUser, authorizeAdmin  } = require('../middleware/authMiddleware')
-const adminController = require('../controllers/admin.controller')
-const {resetRating} = require('../controllers/admin.controller')
+const { adminController, resetRating } = require('../controllers/admin.controller')
+// const resetRating = require('../controllers/admin.controller')
 
 
 router.post('/update-rating', async (req, res) => {
