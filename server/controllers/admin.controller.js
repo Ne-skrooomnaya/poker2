@@ -3,58 +3,63 @@
    // Добавление пользователя в рейтинг
 exports.addUserToRating = async (req, res) => {
     try {
-        const { telegramId, username, score } = req.body;
+        let { telegramId, score } = req.body; // Используем let, чтобы можно было изменить
 
-        // 1. Более строгая валидация входных данных
-        if (!telegramId || !username || score === undefined || score === null) {
-            return res.status(400).json({ error: 'Missing required fields: telegramId, username, score' });
+        // --- ПРЕОБРАЗОВАНИЕ И ПРОВЕРКА ВХОДНЫХ ДАННЫХ ---
+
+        // Убедимся, что score - это число
+        score = parseInt(score);
+        if (isNaN(score)) {
+            return res.status(400).json({ message: "Score должен быть числом" });
         }
 
-        // Преобразуем score в число и проверяем, что это действительно число
-        const parsedScore = parseInt(score, 10);
-        if (isNaN(parsedScore)) {
-            return res.status(400).json({ error: 'Invalid score format. Score must be a number.' });
+        // Убедимся, что telegramId - это строка, и очистим его от лишних пробелов
+        telegramId = String(telegramId).trim();
+        if (!telegramId) {
+            return res.status(400).json({ message: "Telegram ID не может быть пустым" });
         }
 
-        // Опционально: добавить проверку на отрицательный score, если это нежелательно
-        // if (parsedScore < 0) {
-        //     return res.status(400).json({ error: 'Score cannot be negative.' });
-        // }
-          console.log('Received in addUserToRating:', { telegramId, username, score });
+        // --- КОНЕЦ ПРЕОБРАЗОВАНИЯ И ПРОВЕРКИ ---
 
-        // 2. Проверяем, существует ли пользователь с таким telegramId в коллекции users
-        const existingUser = await User.findOne({ telegramId });
-        if (!existingUser) {
-            return res.status(404).json({ error: 'User with this telegramId not found in the users collection.' });
+        // Ищем пользователя по telegramId
+        // Важно: Если в базе telegramId может быть, например, числом, а приходит строкой,
+        // то нужно убедиться, что и поиск, и данные в базе сопоставимы.
+        // Судя по скриншотам, telegramId в базе - строка, поэтому String(telegramId).trim() должен работать.
+        const user = await User.findOne({ telegramId: telegramId });
+
+        if (!user) {
+            // Если пользователя нет, вернуть ошибку 404
+            return res.status(404).json({ message: `Пользователь с Telegram ID "${telegramId}" не найден.` });
         }
 
-        // 3. Проверяем, есть ли уже запись в рейтинге для этого пользователя
-        const existingRating = await Rating.findOne({ telegramId });
+        // Проверяем, есть ли уже запись в рейтинге для этого пользователя
+        const existingRating = await Rating.findOne({ telegramId: telegramId }); // Ищем по такому же telegramId
+
         if (existingRating) {
-            // Если пользователь уже есть в рейтинге, то это уже не "добавление", а "обновление".
-            // Чтобы не ломать логику добавления, вернем ошибку.
-            // Если админ захочет изменить, это будет отдельная функция "updateUserRating".
-            return res.status(409).json({ error: 'User already exists in the rating. Use the update function for changes.' });
+            // Если есть, обновляем его score
+            existingRating.score = score;
+            await existingRating.save();
+            console.log(`Рейтинг пользователя ${telegramId} обновлен на ${score}`);
+            return res.status(200).json(existingRating);
+        } else {
+            // Если нет, создаем новую запись
+            const newRating = new Rating({
+                telegramId: telegramId, // Используем уже очищенный telegramId
+                score: score,
+                username: user.username // Берем username из найденного пользователя
+            });
+            await newRating.save();
+            console.log(`Пользователь ${telegramId} добавлен в рейтинг со score ${score}`);
+            return res.status(201).json(newRating);
         }
-
-        // 4. Создаем новую запись в рейтинге
-        const newRating = new Rating({
-            telegramId: telegramId,
-            username: username,
-            score: parsedScore, // Используем распарсенное число
-            addedAt: new Date(),
-            updatedAt: new Date(),
-        });
-
-        await newRating.save();
-        res.status(201).json(newRating); // Успешное добавление
-
     } catch (error) {
-        console.error('Error adding user to rating:', error);
-        // Отправляем более информативную ошибку, если это возможно,
-        // но для начала просто вернем общий 500 Internal Server Error.
-        // Если проблема была в некорректных данных, мы уже вернули 400.
-        // Если проблема в базе данных или другой логике, то 500.
-        res.status(500).json({ error: 'Failed to add user to rating. Please try again later.', details: error.message });
+        console.error("Ошибка при добавлении/обновлении рейтинга:", error);
+        // Предоставляем более детальную информацию об ошибке, если это не связано с чувствительными данными
+        res.status(500).json({
+            message: "Ошибка сервера при добавлении/обновлении рейтинга",
+            error: error.message,
+            // Можно добавить stack trace для отладки, но не в продакшене
+            // stack: error.stack
+        });
     }
 };

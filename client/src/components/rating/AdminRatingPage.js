@@ -25,13 +25,13 @@ function AdminRatingPage({ user }) { // Предполагается, что use
     fetchUsers();
   }, []);
 
- const handleAdminAction = () => {
-    // Здесь будет ваша логика для админского действия, например, сброс рейтинга
-    console.log("Админское действие выполнено!");
-    // После успешного выполнения действия, инкрементируем refreshRatingList
-    // Это заставит RatingList перезагрузить свои данные
-    setRefreshRatingList(prev => prev + 1);
-  };
+//  const handleAdminAction = () => {
+//     // Здесь будет ваша логика для админского действия, например, сброс рейтинга
+//     console.log("Админское действие выполнено!");
+//     // После успешного выполнения действия, инкрементируем refreshRatingList
+//     // Это заставит RatingList перезагрузить свои данные
+//     setRefreshRatingList(prev => prev + 1);
+//   };
 
 
   const handleUpdateRating = async () => {
