@@ -1,18 +1,13 @@
-// server/models/rating.model.js
 const mongoose = require('mongoose');
 
 const ratingSchema = new mongoose.Schema({
-  telegramId: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  score: {
-    type: Number,
-    default: 0,
-  },
-}, {
-  timestamps: true,
-});
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, unique: true },
+    score: { type: Number, default: 0 },
+    username: { type: String, required: true },
+    firstName: { type: String },
+    telegramId: { type: String, required: true, unique: true },
+}, { timestamps: true });
 
-module.exports = mongoose.model('Rating', ratingSchema);
+const Rating = mongoose.model('Rating', ratingSchema);
+
+module.exports = Rating;
