@@ -70,9 +70,10 @@ function UserRatingPage({ user }) {
                 >
                   <span style={{ fontWeight: 'bold' }}>
                     {index + 1}.{' '}
-                    {item.user?.username || item.user?.firstName || 'Неизвестный пользователь'}
+                     {item.username || item.firstName || 'Неизвестный пользователь'}
                   </span>
-                  <span style={{ color: '#007bff' }}>Score: {item.score}</span>
+                  {/* ИЗМЕНЕНИЕ ЗДЕСЬ: Доступ к score непосредственно из item, fallback на 0 */}
+                  <span style={{ color: '#007bff' }}>Score: {item.score || 0}</span>
                 </li>
               ))}
             </ul>
