@@ -1,9 +1,7 @@
     // server/controllers/admin.controller.js (пример)
-const User = require('../models/user.model');
-const Rating = require('../models/rating.model'); // Убедитесь, что модель Rating импортирована
-const jwt = require('jsonwebtoken');
+
    // Добавление пользователя в рейтинг
-const addUserToRating = async (req, res) => {
+exports.addUserToRating = async (req, res) => {
     try {
         let { telegramId, score } = req.body;
 
@@ -81,28 +79,3 @@ const addUserToRating = async (req, res) => {
         });
     }
 };
-
-// НОВАЯ ЛОГИКА: Функция для удаления пользователя из рейтинга
-const deleteUserFromRating = async (req, res) => {
-    try {
-        const { telegramId } = req.params; // Получаем telegramId из параметров URL
-
-        if (!telegramId) {
-            return res.status(400).json({ message: 'Telegram ID пользователя обязателен для удаления.' });
-        }
-
-        // Находим и удаляем запись из коллекции 'ratings' по telegramId
-        const deletedRating = await Rating.findOneAndDelete({ telegramId });
-
-        if (!deletedRating) {
-            return res.status(404).json({ message: 'Пользователь не найден в рейтинге.' });
-        }
-
-        res.status(200).json({ message: 'Пользователь успешно удален из рейтинга.', deletedRating });
-
-    } catch (error) {
-        console.error('Ошибка при удалении пользователя из рейтинга:', error);
-        res.status(500).json({ message: 'Ошибка сервера при удалении записи из рейтинга.', error: error.message });
-    }
-};
-module.exports = { addUserToRating, deleteUserFromRating };
