@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { useTelegram } from '../../hooks/useTelegram'; // Убедитесь, что путь правильный
+import useTelegram from '../../hooks/useTelegram';
 import RatingList from './RatingList';
 import '../AdminPage.css';
 
