@@ -1,45 +1,34 @@
-// client/src/pages/AdminRatingPage;
+// client/src/components/rating/AdminRatingPage.js
+
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import RatingList from './RatingList'; // Или 
 import { useNavigate } from 'react-router-dom';
-import { useTelegram } from '../../hooks/useTelegram';
+import { useTelegram } from '../../hooks/useTelegram'; // Убедитесь, что путь правильный
+import RatingList from './RatingList';
 import '../AdminPage.css';
 
-const BACKEND_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
-
-function AdminRatingPage({ user }) { // Предполагается, что user передается из App.js
-  const [users, setUsers] = useState([]); // Список всех пользователей
-  const [selectedUserId, setSelectedUserId] = useState('');
-  const [score, setScore] = useState(0);
-  const [message, setMessage] = useState('');
- const [refreshRatingList, setRefreshRatingList] = useState(0);
-
-//  const { user, webApp } = useTelegram();
+const AdminRatingPage = () => {
+    const { user, webApp } = useTelegram(); // useTelegram теперь должен сам обрабатывать ready() и expand()
     const navigate = useNavigate();
 
-    const [allUsers, setAllUsers] = useState([]);
-    const [ratingUsers, setRatingUsers] = useState([]);
+    const [allUsers, setAllUsers] = useState([]); // Все пользователи из коллекции 'users'
+    const [ratingUsers, setRatingUsers] = useState([]); // Пользователи, которые находятся в рейтинге, с их счетами
     const [selectedUserToAdd, setSelectedUserToAdd] = useState('');
     const [scoreToAdd, setScoreToAdd] = useState(0);
+    const [message, setMessage] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(true);
-  
-  // НОВОЕ СОСТОЯНИЕ: Для выбранного пользователя для удаления
+
     const [selectedUserToDelete, setSelectedUserToDelete] = useState('');
 
     const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:3001/api';
 
-    const fetchUsers = useCallback(async () => {
+    // РЕФАКТОРИНГ: fetchUsers теперь принимает токен в качестве аргумента
+    const fetchUsers = useCallback(async (token) => {
         setLoading(true);
         setError('');
         try {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                navigate('/admin'); // Перенаправляем на страницу админа/логина, если нет токена
-                return;
-            }
-
+            // Запросы выполняются только если токен передан
             const [usersRes, ratingRes] = await Promise.all([
                 axios.get(`${API_BASE_URL}/admin/users`, {
                     headers: { Authorization: `Bearer ${token}` }
@@ -50,77 +39,86 @@ function AdminRatingPage({ user }) { // Предполагается, что use
             ]);
 
             setAllUsers(usersRes.data);
-            setRatingUsers(usersRes.data.filter(u => ratingRes.data.some(r => r.telegramId === u.telegramId))); // Фильтруем, чтобы получить полные данные пользователей, которые в рейтинге
+
+            // ИСПРАВЛЕННАЯ ЛОГИКА: Комбинируем детали пользователя со счетами из рейтинга
+            const combinedRatingUsers = ratingRes.data.map(ratingEntry => {
+                const userDetails = usersRes.data.find(u => u.telegramId === ratingEntry.telegramId);
+                if (userDetails) {
+                    return {
+                        ...userDetails, // Распространяем детали пользователя (username, firstName и т.д.)
+                        score: ratingEntry.score, // Добавляем счет из записи рейтинга
+                    };
+                }
+                return null; // Пользователь не найден в allUsers (не должно происходить при согласованных данных)
+            }).filter(Boolean); // Отфильтровываем любые null-записи
+
+            setRatingUsers(combinedRatingUsers);
 
         } catch (err) {
-            console.error('Failed to fetch users or rating:', err);
+            console.error('Ошибка при загрузке пользователей или рейтинга:', err);
             setError('Не удалось загрузить данные. Пожалуйста, попробуйте снова.');
             if (err.response && err.response.status === 401) {
-                navigate('/admin'); // Перенаправляем на логин, если не авторизован
+                localStorage.removeItem('token'); // Очищаем недействительный токен
+                navigate('/admin'); // Перенаправляем на страницу логина/админа
             }
         } finally {
             setLoading(false);
         }
-    }, [API_BASE_URL, navigate]);
+    }, [API_BASE_URL, navigate]); // Зависимости для useCallback
 
+    // useEffect для начальной загрузки данных и проверки токена
     useEffect(() => {
-        fetchUsers();
-    }, [fetchUsers]);
-  
-    useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        // Предполагается, что у вас есть эндпоинт для получения списка всех пользователей
-        const response = await axios.get(`${BACKEND_URL}/users`); // Например, GET /users
-        setUsers(response.data);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-        setMessage("Не удалось загрузить список пользователей.");
-      }
+        const token = localStorage.getItem('token');
+        if (!token) {
+            navigate('/admin'); // Перенаправляем, если токен не найден
+            return; // Прекращаем выполнение этого эффекта
+        }
+        fetchUsers(token); // Вызываем fetchUsers с токеном
+    }, [fetchUsers, navigate]); // Зависимости для useEffect
+
+    const handleAddUserToRating = async (e) => {
+        e.preventDefault();
+        setMessage('');
+        setError('');
+        if (!selectedUserToAdd) {
+            setError('Пожалуйста, выберите пользователя для добавления.');
+            return;
+        }
+
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) { // Повторная проверка токена перед вызовом API
+                navigate('/admin');
+                return;
+            }
+            const userToAdd = allUsers.find(u => u.telegramId === selectedUserToAdd);
+
+            if (!userToAdd) {
+                setError('Выбранный пользователь не найден.');
+                return;
+            }
+
+            await axios.post(`${API_BASE_URL}/admin/rating/add`, {
+                telegramId: userToAdd.telegramId,
+                score: scoreToAdd
+            }, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            setMessage(`Пользователь ${userToAdd.username || userToAdd.firstName} добавлен в рейтинг со счетом ${scoreToAdd}.`);
+            setSelectedUserToAdd('');
+            setScoreToAdd(0);
+            fetchUsers(token); // Повторно загружаем все данные после успешного добавления
+        } catch (err) {
+            console.error('Ошибка при добавлении пользователя в рейтинг:', err);
+            setError(err.response?.data?.message || 'Не удалось добавить пользователя в рейтинг.');
+            if (err.response && err.response.status === 401) {
+                localStorage.removeItem('token');
+                navigate('/admin');
+            }
+        }
     };
-    fetchUsers();
-  }, []);
 
-//  const handleAdminAction = () => {
-//     // Здесь будет ваша логика для админского действия, например, сброс рейтинга
-//     console.log("Админское действие выполнено!");
-//     // После успешного выполнения действия, инкрементируем refreshRatingList
-//     // Это заставит RatingList перезагрузить свои данные
-//     setRefreshRatingList(prev => prev + 1);
-//   };
-
-
-  const handleUpdateRating = async () => {
-  if (!selectedUserId || score === undefined || score === null) {
-    setMessage("Пожалуйста, выберите пользователя и введите балл.");
-    return;
-  }
-
-  try {
-    const response = await axios.post(`${BACKEND_URL}/admin/update-rating`, {
-      userId: selectedUserId, // <-- Это должно быть ObjectId, что соответствует логике
-      score: score,
-    });
-
-    setMessage(response.data.message);
-    // Возможно, здесь нужно обновить список пользователей или сбросить форму
-    // fetchUsers(); // Если есть такая функция
-    // setScore(0);
-    // setSelectedUserId(null);
-
-  } catch (error) {
-    console.error("Error updating rating:", error);
-    let errorMessage = "Ошибка при обновлении рейтинга.";
-    if (error.response && error.response.data && error.response.data.message) {
-      errorMessage = error.response.data.message;
-    } else if (error.request) {
-      errorMessage = "Сервер недоступен.";
-    }
-    setMessage(errorMessage);
-  }
-};
-
- // НОВАЯ ЛОГИКА: Функция для обработки удаления пользователя из рейтинга
     const handleDeleteUserFromRating = async () => {
         setMessage('');
         setError('');
@@ -129,23 +127,30 @@ function AdminRatingPage({ user }) { // Предполагается, что use
             return;
         }
 
-        // Окно подтверждения перед удалением
         if (!window.confirm(`Вы уверены, что хотите удалить пользователя с Telegram ID: ${selectedUserToDelete} из рейтинга?`)) {
-            return; // Если пользователь отменил, ничего не делаем
+            return;
         }
 
         try {
             const token = localStorage.getItem('token');
+            if (!token) { // Повторная проверка токена перед вызовом API
+                navigate('/admin');
+                return;
+            }
             await axios.delete(`${API_BASE_URL}/admin/rating/delete/${selectedUserToDelete}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
             setMessage(`Пользователь с Telegram ID: ${selectedUserToDelete} успешно удален из рейтинга.`);
-            setSelectedUserToDelete(''); // Сбрасываем выбранного пользователя
-            fetchUsers(); // Обновляем список рейтинга
+            setSelectedUserToDelete('');
+            fetchUsers(token); // Повторно загружаем все данные после успешного удаления
         } catch (err) {
             console.error('Ошибка при удалении пользователя из рейтинга:', err);
             setError(err.response?.data?.message || 'Не удалось удалить пользователя из рейтинга.');
+            if (err.response && err.response.status === 401) {
+                localStorage.removeItem('token');
+                navigate('/admin');
+            }
         }
     };
 
@@ -157,44 +162,60 @@ function AdminRatingPage({ user }) { // Предполагается, что use
         return <div className="admin-page-container">Доступ запрещен. Вы не администратор.</div>;
     }
 
-    // Фильтруем пользователей, которые еще не в рейтинге, для формы добавления
-    const usersNotInRating = allUsers.filter(user =>
-        !ratingUsers.some(ratingUser => ratingUser.telegramId === user.telegramId)
+    // Фильтруем пользователей, которых нет в рейтинге, для выпадающего списка "Добавить"
+    const usersNotInRating = allUsers.filter(u =>
+        !ratingUsers.some(ratingUser => ratingUser.telegramId === u.telegramId)
     );
 
-  return (
-    <div style={{ padding: '20px' }}>
-      <h1>Панель Администратора</h1>
-      {message && <p>{message}</p>}
+    // console.log("AdminRatingPage - ratingUsers:", ratingUsers); // Раскомментируйте для отладки
+    // console.log("AdminRatingPage - allUsers:", allUsers); // Раскомментируйте для отладки
 
-      <div>
-        <h2>Управление Рейтингом</h2>
-        <select
-          value={selectedUserId}
-          onChange={(e) => setSelectedUserId(e.target.value)}
-          style={{ marginRight: '10px', padding: '8px' }}
-        >
-          <option value="">-- Выберите пользователя --</option>
-          {users.map(u => (
-            <option key={u._id} value={u._id}>
-              {u.username || u.firstName} ({u._id})
-            </option>
-          ))}
-        </select>
+    return (
+        <div className="admin-page-container">
+            <h1>Админ-панель Рейтинга</h1>
 
-        <input
-          type="number"
-          value={score}
-          onChange={(e) => setScore(Number(e.target.value))}
-          placeholder="Балл рейтинга"
-          style={{ marginRight: '10px', padding: '8px' }}
-        />
+            {message && <p className="success-message">{message}</p>}
+            {error && <p className="error-message">{error}</p>}
 
-        <button onClick={handleUpdateRating} style={{ padding: '8px 15px' }}>
-          добавить в рейтинг или редактировать игрока 
-        </button>
-      </div>
- {/* НОВЫЙ РАЗДЕЛ: Удаление пользователя из рейтинга */}
+            {/* Секция "Добавить пользователя" */}
+            <div className="admin-section">
+                <h2>Добавить пользователя в рейтинг</h2>
+                <form onSubmit={handleAddUserToRating}>
+                    <div className="form-group">
+                        <label htmlFor="userSelectAdd">Выберите пользователя:</label>
+                        <select
+                            id="userSelectAdd"
+                            value={selectedUserToAdd}
+                            onChange={(e) => setSelectedUserToAdd(e.target.value)}
+                            required
+                        >
+                            <option value="">-- Выберите пользователя --</option>
+                            {usersNotInRating.map((u) => {
+                                // Улучшенная логика отображения имени
+                                const displayName = u.username ? `@${u.username}` : (u.firstName && u.lastName ? `${u.firstName} ${u.lastName}` : u.firstName || u.telegramId);
+                                return (
+                                    <option key={u.telegramId} value={u.telegramId}>
+                                        {displayName} ({u.telegramId})
+                                    </option>
+                                );
+                            })}
+                        </select>
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="scoreInput">Начальный счет:</label>
+                        <input
+                            id="scoreInput"
+                            type="number"
+                            value={scoreToAdd}
+                            onChange={(e) => setScoreToAdd(Number(e.target.value))}
+                            required
+                        />
+                    </div>
+                    <button type="submit" className="admin-button">Добавить в рейтинг</button>
+                </form>
+            </div>
+
+            {/* Секция "Удалить пользователя" */}
             <div className="admin-section">
                 <h2>Удалить пользователя из рейтинга</h2>
                 <div className="form-group">
@@ -206,62 +227,36 @@ function AdminRatingPage({ user }) { // Предполагается, что use
                         required
                     >
                         <option value="">-- Выберите пользователя --</option>
-                        {ratingUsers.map((u) => (
-                            <option key={u.telegramId} value={u.telegramId}>
-                                {u.username ? `@${u.username}` : `${u.firstName} ${u.lastName}`} ({u.telegramId})
-                            </option>
-                        ))}
+                        {ratingUsers.map((u) => {
+                            // Улучшенная логика отображения имени для выпадающего списка
+                            const displayName = u.username ? `@${u.username}` : (u.firstName && u.lastName ? `${u.firstName} ${u.lastName}` : u.firstName || u.telegramId);
+                            return (
+                                <option key={u.telegramId} value={u.telegramId}>
+                                    {displayName} ({u.telegramId})
+                                </option>
+                            );
+                        })}
                     </select>
                 </div>
                 <button
                     onClick={handleDeleteUserFromRating}
-                    className="admin-button delete-button" // Добавил класс delete-button для возможного стилизования
+                    className="admin-button delete-button"
                 >
                     Удалить из рейтинга
                 </button>
             </div>
-      
 
-      <hr style={{ margin: '30px 0', borderColor: '#eee' }} />
-
-      {/* Отображаемый список рейтинга для админов */}
-      {/* Передаем title и refreshTrigger */}
-      <RatingList
-        title="Текущий Рейтинг Пользователей"
-        refreshTrigger={[refreshRatingList]}
-      />
-    </div>
-  );
-}
+            {/* Секция "Текущий Рейтинг" */}
+            <div className="admin-section">
+                <h2>Текущий Рейтинг</h2>
+                {ratingUsers.length > 0 ? (
+                    <RatingList users={ratingUsers} title="Пользователи в рейтинге" />
+                ) : (
+                    <p>В рейтинге пока нет пользователей.</p>
+                )}
+            </div>
+        </div>
+    );
+};
 
 export default AdminRatingPage;
-
-// {/* <div style={{
-//         marginBottom: '30px',
-//         padding: '20px',
-//         border: '1px solid #ddd',
-//         borderRadius: '8px',
-//         backgroundColor: '#f9f9f9'
-//       }}>
-//         <h2 style={{ color: '#555', marginBottom: '15px' }}>Инструменты Администратора</h2>
-//         <p style={{ marginBottom: '15px' }}>Здесь будут ваши формы и кнопки для управления рейтингом:</p>
-//         <button
-//           onClick={handleAdminAction}
-//           style={{
-//             padding: '10px 15px',
-//             backgroundColor: '#007bff',
-//             color: 'white',
-//             border: 'none',
-//             borderRadius: '5px',
-//             cursor: 'pointer',
-//             fontSize: '16px',
-//             marginRight: '10px'
-//           }}
-//         >
-//           Выполнить админское действие (обновить/сбросить)
-//         </button>
-//         {/* Другие кнопки или формы для управления рейтингом */}
-//         <p style={{ marginTop: '15px', fontSize: '0.9em', color: '#777' }}>
-//           Например: добавление/удаление пользователей из рейтинга, изменение очков.
-//         </p>
-//       </div> */}
