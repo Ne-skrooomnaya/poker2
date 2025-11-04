@@ -1,7 +1,7 @@
     // server/controllers/admin.controller.js (пример)
 
    // Добавление пользователя в рейтинг
-exports.addUserToRating = async (req, res) => {
+const addUserToRating = async (req, res) => {
     try {
         let { telegramId, score } = req.body;
 
@@ -79,3 +79,7 @@ exports.addUserToRating = async (req, res) => {
         });
     }
 };
+
+    module.exports = {
+      addUserToRating
+    };
