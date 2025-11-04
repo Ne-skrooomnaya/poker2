@@ -1,5 +1,4 @@
     // server/controllers/admin.controller.js (пример)
-const Rating = require('../models/rating.model');
 
    // Добавление пользователя в рейтинг
 const addUserToRating = async (req, res) => {
@@ -80,29 +79,7 @@ const addUserToRating = async (req, res) => {
         });
     }
 };
-const deleteUserFromRating = async (req, res) => {
-  try {
-    const { telegramId } = req.params;
-    if (!telegramId) {
-      return res.status(400).json({ message: 'telegramId обязателен' });
-    }
-
-    // попытка удалить запись рейтинга по telegramId
-    const deleted = await Rating.findOneAndDelete({ telegramId: String(telegramId) });
-
-    if (!deleted) {
-      return res.status(404).json({ message: 'Пользователь не найден в рейтинге' });
-    }
-
-    console.log('Rating deleted for telegramId:', telegramId);
-    return res.status(200).json({ message: 'Пользователь удалён из рейтинга', deleted });
-  } catch (err) {
-    console.error('deleteUserFromRating error:', err);
-    return res.status(500).json({ message: 'Ошибка сервера', error: err.message });
-  }
-};
 
     module.exports = {
-      addUserToRating,
-      deleteUserFromRating
+      addUserToRating
     };
