@@ -5,8 +5,10 @@ const User = require('../models/user.model'); // Нужен для поиска 
 const Rating = require('../models/rating.model');
 const mongoose = require('mongoose'); // Для валидации ObjectId
 const { authenticateUser, authorizeAdmin  } = require('../middleware/authMiddleware')
-const  { addUserToRating }  = require('../controllers/admin.controller')
+const  { addUserToRating, deleteUserFromRating }  = require('../controllers/admin.controller')
+const  { getAllRatings, getAllUsers }  = require('../controllers/rating.controller')
 
+const { verifyToken } = require('../utils/auth');
 
 router.post('/update-rating', async (req, res) => {
   // Фронтенд отправляет userId (который является ObjectId из User) и score
@@ -55,7 +57,7 @@ router.post('/update-rating', async (req, res) => {
     res.status(500).json({ message: 'Ошибка сервера при обновлении рейтинга.' });
   }
 });
-
+router.get('/users', verifyToken, authorizeAdmin, getAllRatings);
 router.get('/dashboard', authenticateUser, authorizeAdmin, addUserToRating)
-
+router.delete('/rating/delete/:telegramId', verifyToken, authorizeAdmin, deleteUserFromRating);
 module.exports = router;

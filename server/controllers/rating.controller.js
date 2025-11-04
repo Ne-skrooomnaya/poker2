@@ -2,7 +2,7 @@
 const Rating = require('../models/rating.model');
 const User = require('../models/user.model');
 
-exports.getAllRatings = async (req, res) => {
+const getAllRatings = async (req, res) => {
   try {
     const ratings = await Rating.find({})
       .sort({ score: -1 })
@@ -42,3 +42,17 @@ exports.getAllRatings = async (req, res) => {
     res.status(500).json({ message: 'Ошибка сервера при получении рейтинга.' });
   }
 };
+
+const getAllUsers = async (req, res) => {
+        try {
+            const users = await User.find({}); // Получаем всех пользователей
+            res.status(200).json(users);
+        } catch (error) {
+            console.error('Ошибка при получении всех пользователей:', error);
+            res.status(500).json({ message: 'Ошибка сервера при получении пользователей.' });
+        }
+    };
+    module.exports = {
+      getAllRatings,
+      getAllUsers
+    };

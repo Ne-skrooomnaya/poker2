@@ -5,6 +5,7 @@ const User = require('../models/user.model');
 // const authMiddleware = require('../middleware/authMiddleware'); // Если нужно защитить роут
 
 // GET /users - Получить список всех пользователей
+
 // router.get('/', authMiddleware, async (req, res) => { // Защищаем роут, если требуется
 router.get('/', async (req, res) => { // Пока без защиты для примера
   try {
