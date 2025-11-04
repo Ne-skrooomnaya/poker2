@@ -22,44 +22,45 @@ function AdminRatingPage({ user }) { // user передается как про�
 
     // Функция для получения всех данных
     const fetchData = useCallback(async () => {
-        setLoading(true);
-        setError('');
-        setMessage(''); // Очищаем сообщения при новой загрузке
-        try {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                navigate('/admin'); // Перенаправляем на страницу админа/логина, если нет токена
-                return;
-            }
+    console.log('fetchData called at', new Date().toISOString());
+    setLoading(true);
+    setError('');
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.warn('No token, redirect to /admin');
+        navigate('/admin');
+        return;
+      }
 
-            // Получаем всех пользователей (с _id и telegramId)
-            const usersRes = await axios.get(`${API_BASE_URL}/admin/users`, { // Предполагаем, что такой эндпоинт существует
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            setAllUsers(usersRes.data);
+      const [usersRes, ratingRes] = await Promise.all([
+        axios.get(`${API_BASE_URL}/admin/users`, { headers: { Authorization: `Bearer ${token}` } }),
+        axios.get(`${API_BASE_URL}/rating`, { headers: { Authorization: `Bearer ${token}` } }),
+      ]);
 
-            // Получаем все записи рейтинга (с telegramId и score)
-            const ratingRes = await axios.get(`${API_BASE_URL}/rating`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            setRatingEntries(ratingRes.data);
+      console.log('usersRes.data:', usersRes.data);
+      console.log('ratingRes.data:', ratingRes.data);
 
-        } catch (err) {
-            console.error("Ошибка при загрузке данных:", err);
-            setError(err.response?.data?.message || "Не удалось загрузить данные. Пожалуйста, попробуйте снова.");
-            if (err.response && err.response.status === 401) {
-                localStorage.removeItem('token'); // Очищаем недействительный токен
-                navigate('/admin'); // Перенаправляем на логин, если не авторизован
-            }
-        } finally {
-            setLoading(false);
-        }
-    }, [API_BASE_URL, navigate]);
+      setAllUsers(usersRes.data || []);
+      setRatingEntries(ratingRes.data || []);
+    } catch (err) {
+      console.error('fetchData error', err);
+      setError(err.response?.data?.message || 'Ошибка загрузки данных');
+      if (err.response?.status === 401) {
+        localStorage.removeItem('token');
+        navigate('/admin');
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, [navigate]);
 
     // Загружаем данные при монтировании компонента
-    useEffect(() => {
-        fetchData();
-    }, [fetchData]);
+   // ВАЖНО: вызвать fetchData ровно 1 раз при маунте
+  useEffect(() => {
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // пустой массив — fetchData вызовется один раз
 
     // Вычисляем список пользователей, которые УЖЕ в рейтинге (для отображения и удаления)
     const usersInRatingForDisplay = useMemo(() => {
@@ -163,17 +164,19 @@ function AdminRatingPage({ user }) { // user передается как про�
             <div style={{ marginBottom: '30px', border: '1px solid #ccc', padding: '15px', borderRadius: '5px' }}>
                 <h2>Добавить или редактировать игрока в рейтинге</h2>
                 <select
-                    value={selectedUserToAdd}
-                    onChange={(e) => setSelectedUserToAdd(e.target.value)}
-                    style={{ marginRight: '10px', padding: '8px' }}
-                >
-                    <option value="">-- Выберите пользователя --</option>
-                    {usersNotInRatingForAdd.map(u => (
-                        <option key={u.telegramId} value={u.telegramId}>
-                            {u.username || u.firstName || `ID: ${u.telegramId}`} ({u.telegramId})
-                        </option>
-                    ))}
-                </select>
+  value={selectedUserToAdd}
+  onChange={e => setSelectedUserToAdd(e.target.value)}
+  disabled={loading || usersNotInRatingForAdd.length === 0}
+>
+  <option value="">{loading ? 'Загрузка...' : '-- Выберите пользователя --'}</option>
+  {usersNotInRatingForAdd.length === 0 && !loading
+    ? <option value="">Нет пользователей</option>
+    : usersNotInRatingForAdd.map(u => (
+        <option key={u.telegramId || u._id} value={u.telegramId || u._id}>
+          {u.username || u.firstName || `ID:${u.telegramId || u._id}`} ({u.telegramId || u._id})
+        </option>
+      ))}
+</select>
 
                 <input
                     type="number"
