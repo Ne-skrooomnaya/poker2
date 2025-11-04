@@ -43,16 +43,7 @@ const getAllRatings = async (req, res) => {
   }
 };
 
-const getAllUsers = async (req, res) => {
-        try {
-            const users = await User.find({}); // Получаем всех пользователей
-            res.status(200).json(users);
-        } catch (error) {
-            console.error('Ошибка при получении всех пользователей:', error);
-            res.status(500).json({ message: 'Ошибка сервера при получении пользователей.' });
-        }
-    };
+
     module.exports = {
-      getAllRatings,
-      getAllUsers
+      getAllRatings
     };
