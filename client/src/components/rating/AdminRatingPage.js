@@ -125,8 +125,8 @@ function AdminRatingPage() {
                     onChange={(e) => setSelectedUserToDelete(e.target.value)}
                 >
                     <option value="">Выберите пользователя</option>
-                    {/* Отображаем только тех пользователей, которые УЖЕ есть в рейтинге */}
-                    {ratings.map((ratingEntry) => {
+                    {/* ОБНОВЛЕНО: Добавлена проверка Array.isArray(ratings) */}
+                    {Array.isArray(ratings) && ratings.map((ratingEntry) => {
                         // Поиск username пользователя по telegramId из списка allUsers
                         const userInRating = allUsers.find(u => u.telegramId === ratingEntry.telegramId);
                         return (
@@ -142,6 +142,8 @@ function AdminRatingPage() {
             {/* Секция "Текущий рейтинг" (существующая) */}
             <div className="admin-section">
                 <h2>Текущий рейтинг</h2>
+                {/* ОБНОВЛЕНО: Добавлена проверка Array.isArray(ratings) для RatingList */}
+                {Array.isArray(ratings) && <RatingList ratings={ratings} />}
                 {/* Убедитесь, что компонент RatingList получает актуальный список рейтинга */}
                 <RatingList ratings={ratings} />
             </div>
