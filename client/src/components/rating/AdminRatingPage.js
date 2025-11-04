@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; // Добавляем useNavigate для перенаправления
-import RatingList from '../components/rating/RatingList'; // Проверьте путь, если он отличается
+import RatingList from './RatingList'; // Проверьте путь, если он отличается
 
 // Изменяем BACKEND_URL на API_BASE_URL для согласованности и правильного порта
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:3001/api';
