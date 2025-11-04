@@ -20,19 +20,19 @@ function AdminRatingPage() {
                 const config = { headers: { Authorization: `Bearer ${token}` } };
 
                 // Загрузка всех пользователей (для выбора как в добавлении, так и в удалении)
-                const usersRes = await axios.get('/api/users', config);
+                const usersRes = await axios.get('/users', config);
                 setAllUsers(usersRes.data);
 
                 // Загрузка текущего рейтинга
                 // Используем /api/ratings, который должен возвращать весь рейтинг (для админа)
-                const ratingsRes = await axios.get('/api/ratings', config);
+                const ratingsRes = await axios.get('/ratings', config);
                 setRatings(ratingsRes.data);
 
             } catch (error) {
                 console.error('Error fetching admin data:', error);
                 if (error.response && error.response.status === 403) {
                     toast.error('Недостаточно прав для доступа к админ-панели.');
-                    navigate('/'); // Перенаправляем, если нет прав
+                    navigate('/ratings'); // Перенаправляем, если нет прав
                 } else {
                     toast.error('Ошибка при загрузке данных администратора.');
                 }
@@ -52,7 +52,7 @@ function AdminRatingPage() {
             const token = localStorage.getItem('token');
             const config = { headers: { Authorization: `Bearer ${token}` } };
 
-            await axios.post('/api/admin/ratings', { telegramId: selectedUserToAdd }, config);
+            await axios.post('/admin/ratings', { telegramId: selectedUserToAdd }, config);
 
             toast.success('Пользователь успешно добавлен в рейтинг!');
             setSelectedUserToAdd(''); // Сброс выбранного пользователя
