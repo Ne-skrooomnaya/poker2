@@ -5,9 +5,7 @@ const User = require('../models/user.model'); // Нужен для поиска 
 const Rating = require('../models/rating.model');
 const mongoose = require('mongoose'); // Для валидации ObjectId
 const { authenticateUser, authorizeAdmin  } = require('../middleware/authMiddleware')
-// const { adminProtect } = require('../middleware/authMiddleware');
-
-const { addUserToRating, deleteRating } = require('../controllers/admin.controller')
+const { addUserToRating } = require('../controllers/admin.controller')
 
 
 router.post('/update-rating', async (req, res) => {
@@ -57,8 +55,6 @@ router.post('/update-rating', async (req, res) => {
     res.status(500).json({ message: 'Ошибка сервера при обновлении рейтинга.' });
   }
 });
-
-router.delete('/ratings/:telegramId', authorizeAdmin, deleteRating); // <--- Добавьте эту строку
 
 router.get('/dashboard', authenticateUser, authorizeAdmin, addUserToRating)
 

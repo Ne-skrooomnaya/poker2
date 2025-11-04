@@ -1,54 +1,48 @@
+// client/src/pages/AdminRatingPage;
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import RatingList from './RatingList';
+import { toast } from 'react-toastify'; // Убедитесь, что toastify установлен и настроен
+import RatingList from './RatingList'; // Убедитесь, что импорт RatingList есть
 
 function AdminRatingPage() {
     const navigate = useNavigate();
-    const [users, setUsers] = useState([]); // Для списка всех пользователей (для добавления и для отображения имен при удалении)
-    const [selectedUserToAdd, setSelectedUserToAdd] = useState(''); // Выбранный пользователь для добавления
-    const [ratings, setRatings] = useState([]); // Текущий список рейтинга
-    const [selectedUserToDelete, setSelectedUserToDelete] = useState(''); // НОВОЕ: Выбранный пользователь для удаления
+    const [allUsers, setAllUsers] = useState([]); // Все пользователи для добавления
+    const [selectedUserToAdd, setSelectedUserToAdd] = useState(''); // Для добавления
+    const [selectedUserToDelete, setSelectedUserToDelete] = useState(''); // <--- НОВОЕ: Для удаления
+    const [ratings, setRatings] = useState([]); // <--- Убедитесь, что этот стейт используется для текущего рейтинга
 
-    // --- Существующий useEffect для загрузки данных ---
+    // --- ОБНОВЛЕННЫЙ useEffect для загрузки данных ---
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        const config = { headers: { Authorization: `Bearer ${token}` } };
-
-        const fetchUsers = async () => {
+        const fetchAdminData = async () => {
             try {
-                const res = await axios.get('/api/admin/usersForRating', config);
-                setUsers(res.data);
+                const token = localStorage.getItem('token');
+                const config = { headers: { Authorization: `Bearer ${token}` } };
+
+                // Загрузка всех пользователей (для выбора как в добавлении, так и в удалении)
+                const usersRes = await axios.get('/api/admin/usersForRating', config);
+                setAllUsers(usersRes.data);
+
+                // Загрузка текущего рейтинга
+                // Используем /api/ratings, который должен возвращать весь рейтинг (для админа)
+                const ratingsRes = await axios.get('/', config);
+                setRatings(ratingsRes.data);
+
             } catch (error) {
-                console.error('Error fetching users for rating:', error);
+                console.error('Error fetching admin data:', error);
                 if (error.response && error.response.status === 403) {
                     toast.error('Недостаточно прав для доступа к админ-панели.');
-                    navigate('/');
+                    navigate('/'); // Перенаправляем, если нет прав
                 } else {
-                    toast.error('Ошибка при загрузке пользователей для рейтинга.');
+                    toast.error('Ошибка при загрузке данных администратора.');
                 }
             }
         };
+        fetchAdminData();
+    }, [navigate]); // navigate в зависимостях, так как он используется внутри useEffect
 
-        const fetchRatings = async () => {
-            try {
-                // Предполагаем, что /api/ratings возвращает весь список рейтинга
-                const res = await axios.get('/api/ratings', config);
-                setRatings(res.data);
-            } catch (error) {
-                console.error('Error fetching current ratings:', error);
-                toast.error('Ошибка при загрузке текущего рейтинга.');
-            }
-        };
-
-        // Запускаем обе загрузки
-        fetchUsers();
-        fetchRatings();
-    }, [navigate]);
-
-    // --- Существующая функция для добавления пользователя ---
-    const handleAddUserToRating = async () => {
+    // --- СУЩЕСТВУЮЩАЯ функция для добавления пользователя (без изменений) ---
+    const handleUpdateRating = async () => {
         if (!selectedUserToAdd) {
             toast.error('Выберите пользователя для добавления в рейтинг.');
             return;
@@ -62,6 +56,7 @@ function AdminRatingPage() {
 
             toast.success('Пользователь успешно добавлен в рейтинг!');
             setSelectedUserToAdd(''); // Сброс выбранного пользователя
+
             // Обновляем список рейтинга после добавления
             const updatedRatingsRes = await axios.get('/api/ratings', config);
             setRatings(updatedRatingsRes.data);
@@ -80,19 +75,16 @@ function AdminRatingPage() {
             return;
         }
 
-        // Добавим подтверждение для удаления
-        if (!window.confirm('Вы уверены, что хотите удалить этого пользователя из рейтинга?')) {
-            return;
-        }
-
         try {
             const token = localStorage.getItem('token');
             const config = { headers: { Authorization: `Bearer ${token}` } };
 
+            // Отправляем DELETE запрос на новый эндпоинт
             await axios.delete(`/api/admin/ratings/${selectedUserToDelete}`, config);
 
             toast.success('Пользователь успешно удален из рейтинга!');
             setSelectedUserToDelete(''); // Сброс выбранного пользователя
+
             // Обновляем список рейтинга после удаления
             const updatedRatingsRes = await axios.get('/api/ratings', config);
             setRatings(updatedRatingsRes.data);
@@ -108,7 +100,7 @@ function AdminRatingPage() {
         <div className="admin-page">
             <h1>Админ Панель Рейтинга</h1>
 
-            {/* Секция "Добавить пользователя в рейтинг" (ВОССТАНОВЛЕНА) */}
+            {/* Секция "Добавить пользователя в рейтинг" (существующая) */}
             <div className="admin-section">
                 <h2>Добавить пользователя в рейтинг</h2>
                 <select
@@ -116,14 +108,13 @@ function AdminRatingPage() {
                     onChange={(e) => setSelectedUserToAdd(e.target.value)}
                 >
                     <option value="">Выберите пользователя</option>
-                    {/* Используем 'users' для выбора пользователя для добавления */}
-                    {Array.isArray(users) && users.map((user) => (
+                    {allUsers.map((user) => (
                         <option key={user._id} value={user.telegramId}>
-                            {user.username || `ID: ${user.telegramId}`}
+                            {user.username || `ID: ${user.telegramId}`} {/* Отображаем username или ID */}
                         </option>
                     ))}
                 </select>
-                <button onClick={handleAddUserToRating}>Добавить в рейтинг</button>
+                <button onClick={handleUpdateRating}>Добавить в рейтинг</button>
             </div>
 
             {/* --- НОВАЯ СЕКЦИЯ: Удалить пользователя из рейтинга --- */}
@@ -134,14 +125,13 @@ function AdminRatingPage() {
                     onChange={(e) => setSelectedUserToDelete(e.target.value)}
                 >
                     <option value="">Выберите пользователя</option>
-                    {/* ОБНОВЛЕНО: Отображаем только тех, кто в рейтинге, но с username из 'users' */}
-                    {Array.isArray(ratings) && Array.isArray(users) && ratings.map((ratingEntry) => {
-                        // Ищем пользователя из общего списка 'users' по telegramId из текущей записи рейтинга
-                        const userInAllUsers = users.find(u => u.telegramId === ratingEntry.telegramId);
+                    {/* Отображаем только тех пользователей, которые УЖЕ есть в рейтинге */}
+                    {ratings.map((ratingEntry) => {
+                        // Поиск username пользователя по telegramId из списка allUsers
+                        const userInRating = allUsers.find(u => u.telegramId === ratingEntry.telegramId);
                         return (
                             <option key={ratingEntry._id} value={ratingEntry.telegramId}>
-                                {/* Если нашли username, используем его, иначе просто ID */}
-                                {userInAllUsers ? userInAllUsers.username : `ID: ${ratingEntry.telegramId}`}
+                                {userInRating ? userInRating.username : `ID: ${ratingEntry.telegramId}`}
                             </option>
                         );
                     })}
@@ -153,7 +143,7 @@ function AdminRatingPage() {
             <div className="admin-section">
                 <h2>Текущий рейтинг</h2>
                 {/* Убедитесь, что компонент RatingList получает актуальный список рейтинга */}
-                {Array.isArray(ratings) && <RatingList ratings={ratings} />}
+                <RatingList ratings={ratings} />
             </div>
         </div>
     );

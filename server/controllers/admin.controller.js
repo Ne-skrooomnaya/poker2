@@ -1,6 +1,6 @@
     // server/controllers/admin.controller.js (пример)
 const Rating = require('../models/rating.model'); // Убедитесь, что эта строка уже есть или добавьте ее
-const User = require('../models/user.model');   // Добавление пользователя в рейтинг
+   // Добавление пользователя в рейтинг
 const addUserToRating = async (req, res) => {
     try {
         let { telegramId, score } = req.body;
