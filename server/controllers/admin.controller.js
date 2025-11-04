@@ -3,7 +3,7 @@ const User = require('../models/user.model');
 const Rating = require('../models/rating.model'); // Убедитесь, что модель Rating импортирована
 const jwt = require('jsonwebtoken');
    // Добавление пользователя в рейтинг
-exports.addUserToRating = async (req, res) => {
+const addUserToRating = async (req, res) => {
     try {
         let { telegramId, score } = req.body;
 
@@ -83,7 +83,7 @@ exports.addUserToRating = async (req, res) => {
 };
 
 // НОВАЯ ЛОГИКА: Функция для удаления пользователя из рейтинга
-exports.deleteUserFromRating = async (req, res) => {
+const deleteUserFromRating = async (req, res) => {
     try {
         const { telegramId } = req.params; // Получаем telegramId из параметров URL
 
