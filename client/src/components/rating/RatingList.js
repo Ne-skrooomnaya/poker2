@@ -92,16 +92,16 @@ const handleDelete = async (telegramId) => {
                         {item.username || item.firstName || 'Неизвестный пользователь'}
                       </span>
                       <span style={{ color: '#007bff' }}>Score: {item.score || 0}</span>
-                      <span>      {
+                      <span>                    </span>
+                    </li>
+                  ))} {
   users.map((user) => (
     <div key={user.telegramId}>
       <span>{user.name} ({user.telegramId})</span>
       <button onClick={() => handleDelete(user.telegramId)}>Удалить из рейтинга</button>
     </div>
   ))
-}                     </span>
-                    </li>
-                  ))} 
+}       
                 </ul>
               ) : (
                 <p style={{ color: '#666' }}>Рейтинг пока пуст.</p>
