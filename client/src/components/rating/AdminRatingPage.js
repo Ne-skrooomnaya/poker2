@@ -32,6 +32,31 @@ function AdminRatingPage({ user }) { // Предполагается, что use
 //     // Это заставит RatingList перезагрузить свои данные
 //     setRefreshRatingList(prev => prev + 1);
 //   };
+const handleDelete = async (telegramId) => {
+  if (!window.confirm('Вы уверены, что хотите удалить этого пользователя из рейтинга?')) {
+    return;
+  }
+
+  try {
+    const response = await fetch(`/api/ratings/${telegramId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (response.ok) {
+      setUsers(prev => prev.filter(user => user.telegramId !== telegramId));
+    } else {
+      alert('Ошибка при удалении пользователя из рейтинга');
+    }
+  } catch (error) {
+    console.error('Ошибка при удалении:', error);
+    alert('Ошибка сети');
+  }
+};
+
+// В JSX, внутри map-цикла (рядом с кнопкой добавления):
 
 
   const handleUpdateRating = async () => {
@@ -96,6 +121,14 @@ function AdminRatingPage({ user }) { // Предполагается, что use
           добавить в рейтинг или редактировать игрока 
         </button>
       </div>
+      {
+  users.map((user) => (
+    <div key={user.telegramId}>
+      <span>{user.name} ({user.telegramId})</span>
+      <button onClick={() => handleDelete(user.telegramId)}>Удалить из рейтинга</button>
+    </div>
+  ))
+}
 
       
 

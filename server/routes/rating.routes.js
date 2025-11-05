@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const Rating = require('../models/rating.model');
 const User = require('../models/user.model');
-const { getAllRatings } = require('../controllers/rating.controller');
+const { getAllRatings, deleteRating } = require('../controllers/rating.controller');
 
 const mongoose = require('mongoose');
 // GET /rating - Получить список рейтингов
@@ -36,5 +36,6 @@ router.get('/', async (req, res) => {
     res.status(500).json({ message: 'Server error fetching ratings' });
   }
 });
+router.delete('/:telegramId', deleteRating);
 
 module.exports = router;

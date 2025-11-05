@@ -80,6 +80,8 @@ const addUserToRating = async (req, res) => {
     }
 };
 
+
     module.exports = {
+
       addUserToRating
     };

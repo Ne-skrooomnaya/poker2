@@ -42,8 +42,25 @@ const getAllRatings = async (req, res) => {
     res.status(500).json({ message: 'Ошибка сервера при получении рейтинга.' });
   }
 };
+const deleteRating = async (req, res) => {
+  const { telegramId } = req.params;
+
+  try {
+    const result = await Rating.deleteOne({ telegramId });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: 'Пользователь не найден в рейтинге' });
+    }
+
+    res.status(200).json({ message: 'Пользователь успешно удален из рейтинга' });
+  } catch (error) {
+    console.error('Ошибка при удалении пользователя из рейтинга:', error);
+    res.status(500).json({ message: 'Ошибка сервера' });
+  }
+};
 
 
     module.exports = {
+               deleteRating,
       getAllRatings
     };
