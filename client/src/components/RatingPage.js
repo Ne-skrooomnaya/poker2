@@ -1,7 +1,7 @@
 // client/src/components/RatingPage.js
 
 import React from 'react';
-import AdminPage from './AdminPage'; // Компонент админского рейтинга
+import AdminRatingPage from './AdminPage'; // Компонент админского рейтинга
 import UserRatingPage from './rating/UserRatingPage';   // Компонент обычного рейтинга
 import useTelegram from '../hooks/useTelegram';         // Путь к твоему хуку
 
@@ -16,7 +16,7 @@ const RatingPage = ({ user }) => { // Принимаем user как пропс
 
     // Если пользователь является админом, отображаем AdminRatingPage
     if (isAdmin) {
-        return <AdminPage user={user} />; // Передаем user, если он нужен в AdminRatingPage
+        return <AdminRatingPage user={user} />; // Передаем user, если он нужен в AdminRatingPage
     }
     // В противном случае, отображаем UserRatingPage
     else {
