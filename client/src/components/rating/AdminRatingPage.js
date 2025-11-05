@@ -66,7 +66,29 @@ function AdminRatingPage({ user }) { // Предполагается, что use
     setMessage(errorMessage);
   }
 };
+const handleDelete = async (telegramId) => {
+  if (!window.confirm('Вы уверены, что хотите удалить этого пользователя из рейтинга?')) {
+    return;
+  }
 
+  try {
+    const response = await fetch(`/api/ratings/${telegramId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (response.ok) {
+      setUsers(prev => prev.filter(user => user.telegramId !== telegramId));
+    } else {
+      alert('Ошибка при удалении пользователя из рейтинга');
+    }
+  } catch (error) {
+    console.error('Ошибка при удалении:', error);
+    alert('Ошибка сети');
+  }
+};
   return (
     <div style={{ padding: '20px' }}>
       <h1>Панель Администратора</h1>
@@ -84,7 +106,14 @@ function AdminRatingPage({ user }) { // Предполагается, что use
             <option key={u._id} value={u._id}>
               {u.username || u.firstName} ({u._id})
             </option>
-          ))}
+          ))} {
+  users.map((user) => (
+    <div key={user.telegramId}>
+      <span>{user.name} ({user.telegramId})</span>
+      <button onClick={() => handleDelete(user.telegramId)}>Удалить из рейтинга</button>
+    </div>
+  ))
+} 
         </select>
 
         <input
