@@ -139,16 +139,10 @@ const handleDelete = async (telegramId) => {
 }
         </select>
 
-        <input
-          type="number"
-          value={score}
-          onChange={(e) => setScore(Number(e.target.value))}
-          placeholder="Балл рейтинга"
-          style={{ marginRight: '10px', padding: '8px' }}
-        />
+        
 
-        <button onClick={handleUpdateRating} style={{ padding: '8px 15px' }}>
-          добавить в рейтинг или редактировать игрока 
+        <button onClick={handleDelete} style={{ padding: '8px 15px' }}>
+          elfkbnm 
         </button>
       </div>
 
