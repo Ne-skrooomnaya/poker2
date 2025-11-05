@@ -10,7 +10,7 @@ function AdminPage({ user }) {
   const navigate = useNavigate();
     return (
     <>
-    <p>Привет, {user.firstName || user.username || 'Админ'}!</p>
+    <p>Привет, админ {user.firstName || user.username || 'Админ'}!</p>
     {/* Логотип */}
           <div className="logo-container">
             <img src={logo} alt="Poker Logo" />
