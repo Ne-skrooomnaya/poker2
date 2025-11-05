@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 function UserPage({ user }) {
   const navigate = useNavigate();
-
+console.log('UserPage rendered with user:', user);
   return (
     <div style={{ padding: '20px' }}>
       <h1>Добро пожаловать, {user.firstName || user.username || 'Пользователь'}!</h1>
