@@ -52,44 +52,37 @@ function AdminRatingPage({ user }) {
 
   // Функция удаления по telegramId
   const handleDelete = async () => {
-    if (!selectedUserId) {
-      alert('Пожалуйста, выберите пользователя');
-      return;
-    }
+  if (!selectedUserId) {
+    alert('Пожалуйста, выберите пользователя');
+    return;
+  }
 
-    const selectedUser = users.find(u => u._id === selectedUserId);
-    if (!selectedUser || !selectedUser.telegramId) {
-      alert('Пользователь не найден или не имеет telegramId');
-      return;
-    }
+  if (!window.confirm(`Вы уверены, что хотите удалить этого пользователя из рейтинга?`)) {
+    return;
+  }
 
-    if (!window.confirm(`Вы уверены, что хотите удалить ${selectedUser.username || selectedUser.firstName} из рейтинга?`)) {
-      return;
-    }
+  try {
+    const response = await fetch(`${BACKEND_URL}/ratings/user/${selectedUserId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-    try {
-      const response = await fetch(`${BACKEND_URL}/ratings/${selectedUser.telegramId}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (response.ok) {
-        // Удаляем пользователя из списка
-        setUsers(prev => prev.filter(user => user._id !== selectedUserId));
-        setSelectedUserId('');
-        setScore(0);
-        setRefreshRatingList(prev => prev + 1); // Обновим RatingList
-        alert('Пользователь успешно удален из рейтинга');
-      } else {
-        alert('Ошибка при удалении пользователя из рейтинга');
-      }
-    } catch (error) {
-      console.error('Ошибка при удалении:', error);
-      alert('Ошибка сети');
+    if (response.ok) {
+      setUsers(prev => prev.filter(user => user._id !== selectedUserId));
+      setSelectedUserId('');
+      setScore(0);
+      setRefreshRatingList(prev => prev + 1);
+      alert('Пользователь успешно удален из рейтинга');
+    } else {
+      alert('Ошибка при удалении пользователя из рейтинга');
     }
-  };
+  } catch (error) {
+    console.error('Ошибка при удалении:', error);
+    alert('Ошибка сети');
+  }
+};
 
   return (
     <div style={{ padding: '20px' }}>

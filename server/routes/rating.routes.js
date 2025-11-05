@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const Rating = require('../models/rating.model');
 const User = require('../models/user.model');
-const { getAllRatings, deleteRating } = require('../controllers/rating.controller');
+const { getAllRatings, deleteRating, deleteRatingByUserId } = require('../controllers/rating.controller');
 
 const mongoose = require('mongoose');
 // GET /rating - Получить список рейтингов
@@ -37,5 +37,5 @@ router.get('/', async (req, res) => {
   }
 });
 router.delete('/:telegramId', deleteRating);
-
+router.delete('/user/:userId', deleteRatingByUserId);
 module.exports = router;
