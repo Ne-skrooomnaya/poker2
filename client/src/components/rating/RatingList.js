@@ -1,6 +1,6 @@
-    // client/src/components/rating/RatingList.js
-    import React, { useState, useEffect } from 'react';
-    import axios from 'axios';
+// client/src/pages/AdminRatingPage;
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
     const BACKEND_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
@@ -15,6 +15,7 @@
       const [ratingData, setRatingData] = useState([]);
       const [loading, setLoading] = useState(true);
       const [error, setError] = useState(null);
+  const [users, setUsers] = useState([]); // Список всех пользователей
 
       useEffect(() => {
         const fetchRatingData = async () => {
@@ -33,7 +34,29 @@
 
         fetchRatingData();
       }, [refreshKey]); // <--- И ПРОВЕРЬТЕ ЗДЕСЬ
+const handleDelete = async (telegramId) => {
+  if (!window.confirm('Вы уверены, что хотите удалить этого пользователя из рейтинга?')) {
+    return;
+  }
 
+  try {
+    const response = await fetch(`/api/ratings/${telegramId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (response.ok) {
+      setUsers(prev => prev.filter(user => user.telegramId !== telegramId));
+    } else {
+      alert('Ошибка при удалении пользователя из рейтинга');
+    }
+  } catch (error) {
+    console.error('Ошибка при удалении:', error);
+    alert('Ошибка сети');
+  }
+};
       return (
         <div style={{ padding: '0px', fontFamily: 'Arial, sans-serif' }}>
           {title && <h2 style={{ color: '#333', marginBottom: '15px' }}>{title}</h2>}
@@ -69,8 +92,16 @@
                         {item.username || item.firstName || 'Неизвестный пользователь'}
                       </span>
                       <span style={{ color: '#007bff' }}>Score: {item.score || 0}</span>
+                      <span>      {
+  users.map((user) => (
+    <div key={user.telegramId}>
+      <span>{user.name} ({user.telegramId})</span>
+      <button onClick={() => handleDelete(user.telegramId)}>Удалить из рейтинга</button>
+    </div>
+  ))
+}                     </span>
                     </li>
-                  ))}
+                  ))} 
                 </ul>
               ) : (
                 <p style={{ color: '#666' }}>Рейтинг пока пуст.</p>
