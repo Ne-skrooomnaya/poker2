@@ -1,27 +1,37 @@
 // client/src/components/RatingPage.js
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import RatingList from './RatingList';
 
-import React from 'react';
-import AdminPage from './rating/AdminRatingPage'; // Компонент админского рейтинга
-import UserRatingPage from './rating/UserRatingPage';   // Компонент обычного рейтинга
-import useTelegram from '../hooks/useTelegram';         // Путь к твоему хуку
+const BACKEND_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
-const RatingPage = ({ user }) => { // Принимаем user как пропс
-    // Важно: Убедитесь, что user объект, возвращаемый useTelegram(),
-    // действительно содержит поле `role` и оно правильно установлено.
-    // Например: { _id: '...', telegramId: '...', firstName: '...', role: 'admin' }
+function RatingPage({ user }) {
+  const [message, setMessage] = useState('');
 
-    // Проверяем, есть ли пользователь и его роль 'admin'
-    // Используем ?. для безопасного доступа, на случай если user еще null
-    const isAdmin = user?.role === 'admin';
-
-    // Если пользователь является админом, отображаем AdminRatingPage
-    if (isAdmin) {
-        return <AdminPage user={user} />; // Передаем user, если он нужен в AdminRatingPage
+  useEffect(() => {
+    if (!user) {
+      setMessage('Доступ запрещён. Пожалуйста, авторизуйтесь.');
+      return;
     }
-    // В противном случае, отображаем UserRatingPage
-    else {
-        return <UserRatingPage user={user} />; // Передаем user, если он нужен в UserRatingPage
-    }
-};
+  }, [user]);
+
+  if (!user) {
+    return <div>{message}</div>;
+  }
+
+  return (
+    <div style={{ padding: '20px' }}>
+      <h1>Рейтинг Пользователей</h1>
+
+      <RatingList title="Текущий Рейтинг" />
+
+      <div style={{ marginTop: '20px' }}>
+        <button onClick={() => window.history.back()} style={{ padding: '8px 15px' }}>
+          Назад
+        </button>
+      </div>
+    </div>
+  );
+}
 
 export default RatingPage;

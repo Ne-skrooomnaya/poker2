@@ -1,38 +1,20 @@
-// client/src/components/AdminPage.js
+// client/src/components/UserPage.js
 import React from 'react';
-import './UserPage.css';
-import { Link } from 'react-router-dom';
-import './HomePage.css';
-import logo from './images/logo.svg'; // Импортируйте ваш логотип
+import { useNavigate } from 'react-router-dom';
 
-const UserPage = ({ onLogout }) => {
+function UserPage({ user }) {
+  const navigate = useNavigate();
+
   return (
-    <>
-    {/* Логотип */}
-          <div className="logo-container">
-            <img src={logo} alt="Poker Logo" />
-          </div>
-   {/* Верхний блок */}
+    <div style={{ padding: '20px' }}>
+      <h1>Добро пожаловать, {user.firstName || user.username || 'Пользователь'}!</h1>
+      <p>Это ваша главная страница.</p>
 
-           
-           <div className="bottom-section">
-             <Link to="/rating" className="t">
-               <button className="bottom-section-button">Рейтинг</button>
-             </Link>
-             <Link to="/rating" className="t">
-             <button className="bottom-section-button">Гонка месяца</button></Link>
-             <Link to="/rating" className="t">
-             <button className="bottom-section-button">Прошедшие игры</button></Link>
-             
-             
-           </div>
-
-             {/* Кнопка выхода */}
-      <button className="logout-button" onClick={onLogout}>
-        Выйти
+      <button onClick={() => navigate('/rating')} style={{ padding: '10px 20px', fontSize: '16px' }}>
+        Перейти к рейтингу
       </button>
-    </>
+    </div>
   );
-};
+}
 
 export default UserPage;
