@@ -1,7 +1,6 @@
 // client/src/App.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import AuthPage from './components/AuthPage';
 import RatingPage from './components/RatingPage';
 import AdminRatingPage from './components/AdminRatingPage';
 import UserPage from './components/UserPage';
@@ -35,7 +34,10 @@ function App() {
 
   if (loading) return <div>Загрузка...</div>;
 
-  if (!user) return <AuthPage onLogin={setUser} />;
+  // Если пользователь не авторизован — показываем заглушку или просто ждём
+  if (!user) {
+    return <div>Авторизация...</div>;
+  }
 
   // Изменение: теперь редиректим на UserPage или AdminPage
   if (user.isAdmin) {
