@@ -62,7 +62,7 @@ function AdminRatingPage({ user }) {
   }
 
   try {
-    const response = await fetch(`${BACKEND_URL}/ratings/user/${selectedUserId}`, {
+    const response = await fetch(`${BACKEND_URL}/rating/user/${selectedUserId}`, {
   method: 'DELETE',
   headers: {
     'Content-Type': 'application/json',
