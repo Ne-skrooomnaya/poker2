@@ -72,7 +72,7 @@ const handleDelete = async (telegramId) => {
   }
 
   try {
-    const response = await fetch(`/api/ratings/${telegramId}`, {
+    const response = await fetch(`/ratings/${telegramId}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -142,7 +142,7 @@ const handleDelete = async (telegramId) => {
         
 
         <button onClick={handleDelete} style={{ padding: '8px 15px' }}>
-          elfkbnm 
+          удалить
         </button>
       </div>
 
