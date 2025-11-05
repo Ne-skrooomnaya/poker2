@@ -63,8 +63,8 @@ const deleteRatingByUserId = async (req, res) => {
   const { userId } = req.params;
 
   try {
-    const result = await Rating.deleteOne({ userId }); // <-- удаляем по userId, а не telegramId
-
+    const result = await Rating.deleteOne({ userId });
+console.log('Удаляем пользователя с userId:', userId);
     if (result.deletedCount === 0) {
       return res.status(404).json({ message: 'Пользователь не найден в рейтинге' });
     }

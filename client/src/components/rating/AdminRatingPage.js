@@ -63,12 +63,11 @@ function AdminRatingPage({ user }) {
 
   try {
     const response = await fetch(`${BACKEND_URL}/ratings/user/${selectedUserId}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
+  method: 'DELETE',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
     if (response.ok) {
       setUsers(prev => prev.filter(user => user._id !== selectedUserId));
       setSelectedUserId('');
