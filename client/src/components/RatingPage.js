@@ -1,7 +1,7 @@
 // client/src/components/RatingPage.js
 
 import React from 'react';
-import AdminPage from './AdminPage'; // Компонент админского рейтинга
+import AdminPage from './rating/AdminRatingPage'; // Компонент админского рейтинга
 import UserRatingPage from './rating/UserRatingPage';   // Компонент обычного рейтинга
 import useTelegram from '../hooks/useTelegram';         // Путь к твоему хуку
 
