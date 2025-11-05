@@ -106,14 +106,37 @@ const handleDelete = async (telegramId) => {
             <option key={u._id} value={u._id}>
               {u.username || u.firstName} ({u._id})
             </option>
-          ))} {
+          ))} 
+        </select>
+
+        <input
+          type="number"
+          value={score}
+          onChange={(e) => setScore(Number(e.target.value))}
+          placeholder="Балл рейтинга"
+          style={{ marginRight: '10px', padding: '8px' }}
+        />
+
+        <button onClick={handleUpdateRating} style={{ padding: '8px 15px' }}>
+          добавить в рейтинг или редактировать игрока 
+        </button>
+        
+
+
+        <select
+          value={selectedUserId}
+          onChange={(e) => setSelectedUserId(e.target.value)}
+          style={{ marginRight: '10px', padding: '8px' }}
+        >
+          <option value="">-- Выберите пользователя --</option>
+          {
   users.map((user) => (
     <div key={user.telegramId}>
       <span>{user.name} ({user.telegramId})</span>
       <button onClick={() => handleDelete(user.telegramId)}>Удалить из рейтинга</button>
     </div>
   ))
-} 
+}
         </select>
 
         <input
