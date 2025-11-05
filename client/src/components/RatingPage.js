@@ -1,7 +1,7 @@
 // client/src/components/RatingPage.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import RatingList from './RatingList';
+import RatingList from './rating/RatingList';
 
 const BACKEND_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 

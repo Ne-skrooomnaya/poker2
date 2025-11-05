@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import RatingPage from './components/RatingPage';
-import AdminRatingPage from './components/AdminRatingPage';
+import AdminRatingPage from './components/rating/AdminRatingPage';
 import UserPage from './components/UserPage';
 import AdminPage from './components/AdminPage';
 
