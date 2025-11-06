@@ -29,22 +29,22 @@ app.use(cors({
 }));
 
 // --- API Routes (Важно: Эти маршруты должны быть ПЕРЕД обслуживанием статики) ---
-const authRoutes = require('./routes/auth.routes');
-const userRoutes = require('./routes/user.routes');
-const ratingRoutes = require('./routes/rating.routes');
-const adminRoutes = require('./routes/admin.routes');
+// const authRoutes = require('./routes/auth.routes');
+// const userRoutes = require('./routes/user.routes');
+// const ratingRoutes = require('./routes/rating.routes');
+// const adminRoutes = require('./routes/admin.routes');
 
-app.use('/auth', authRoutes); // Например, /auth/login
-const authRoutes = require('./routes/auth.routes');
-console.log('Auth routes:', authRoutes); // ← должно быть [Function: router]
+// app.use('/auth', authRoutes); // Например, /auth/login
+// const authRoutes = require('./routes/auth.routes');
+// console.log('Auth routes:', authRoutes); // ← должно быть [Function: router]
 
-if (!authRoutes) {
-  console.error(' authRoutes is undefined!');
-  process.exit(1);
-  }
-app.use('/users', userRoutes); // Например, /users
-app.use('/rating', ratingRoutes); // Например, /rating
-app.use('/admin', adminRoutes); // Например, /admin/update-rating
+// if (!authRoutes) {
+//   console.error(' authRoutes is undefined!');
+//   process.exit(1);
+//   }
+// app.use('/users', userRoutes); // Например, /users
+// app.use('/rating', ratingRoutes); // Например, /rating
+// app.use('/admin', adminRoutes); // Например, /admin/update-rating
 
 // --- Обслуживание статических файлов фронтенда ---
 // Путь к папке 'build' вашего React-приложения
