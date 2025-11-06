@@ -30,21 +30,22 @@ function UserRatingPage() {
   }, []);
 
   // Фильтрация с защитой от гонок
-  const filteredRatings = ratings.filter(rating => {
-  const user = users[rating.userId];
-  if (!user) return false;
-console.log('Filtered ratings:', filteredRatings.map(r => users[r.userId]?.username));
-  const searchLower = searchTerm.toLowerCase();
-  const textToSearch = [
-    user.firstName,
-    user.lastName,
-    user.username,
-    user.telegramId
-  ].filter(Boolean).join(' ').toLowerCase();
-console.log('Search term:', searchTerm);
+  const filteredRatings = useMemo(() => {
+    if (!searchTerm.trim()) return ratings; // показываем всё, если поиск пустой
 
-  return textToSearch.includes(searchLower);
-});
+    return ratings.filter(rating => {
+      const user = users[rating.userId];
+      if (!user) return false; // если пользователя нет — не показываем
+
+      const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim().toLowerCase();
+      const username = (user.username || '').toLowerCase();
+
+      return (
+        fullName.includes(searchTerm.toLowerCase()) ||
+        username.includes(searchTerm.toLowerCase())
+      );
+    });
+  }, [ratings, users, searchTerm]);
 
   return (
     <div style={{ padding: '20px' }}>
@@ -62,7 +63,7 @@ console.log('Search term:', searchTerm);
         ← Назад
       </button>
 
-      <input
+      {/* <input
         type="text"
         placeholder="Поиск по имени или никнейму..."
         value={searchTerm}
@@ -73,7 +74,7 @@ console.log('Search term:', searchTerm);
           marginBottom: '20px',
           fontSize: '16px'
         }}
-      />
+      /> */}
 
       <RatingList
         title="Рейтинг участников"
