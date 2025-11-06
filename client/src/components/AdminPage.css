@@ -152,3 +152,24 @@
 .logout-button:hover {
     background-color: #999;
 }
+.bottom-section-button {
+  width: 100%;
+    min-width: 110px;
+    min-height: 60px;
+    border-radius: 5px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, rgb(20, 129, 255), rgba(30, 23, 72, 0.81));
+    color: #fff;
+    font-size: 18px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), inset 0 1px 3px rgba(30, 23, 72, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    transition: background-color 0.3s 
+ease, /* Плавный переход цвета фона */ box-shadow 0.3s 
+ease, /* Плавный переход тени */ transform 0.2s 
+ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
