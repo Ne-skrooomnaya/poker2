@@ -6,13 +6,13 @@ function MonthlyRacePage() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [raceData, setRaceData] = useState([
-  { id: 1, title: 'GM', name: 'Артём Волков', score: 92400000 },
-  { id: 2, title: 'SE', name: 'Мария Петрова', score: 67300000 },
-  { id: 3, title: 'SE', name: 'Рустам Алиев', score: 58900000 },
-  { id: 4, title: 'SE', name: 'Анна Соколова', score: 51200000 },
-  { id: 5, title: 'SE', name: 'Илья Морозов', score: 46700000 },
-  { id: 6, title: 'SE', name: 'Лейла Гусейнова', score: 41500000 },
-  { id: 7, title: 'SE', name: 'Егор Кузнецов', score: 37800000 },
+  { id: 1, title: '', name: 'Артём Волков', score: 92400000 },
+  { id: 2, title: '', name: 'Мария Петрова', score: 67300000 },
+  { id: 3, title: '', name: 'Рустам Алиев', score: 58900000 },
+  { id: 4, title: '', name: 'Анна Соколова', score: 51200000 },
+  { id: 5, title: '', name: 'Илья Морозов', score: 46700000 },
+  { id: 6, title: '', name: 'Лейла Гусейнова', score: 41500000 },
+  { id: 7, title: '', name: 'Егор Кузнецов', score: 37800000 },
 ]);
 
   // Фильтрация по имени
@@ -50,7 +50,7 @@ function MonthlyRacePage() {
           <tr key={item.id}>
             <td>{index + 1}</td>
             <td>
-              <span className={`title-badge ${item.title === 'GM' ? 'title-gm' : 'title-se'}`}>
+              <span className={`title-badge ${item.title === '' ? 'title-gm' : 'title-se'}`}>
                 {item.title}
               </span>
             </td>
