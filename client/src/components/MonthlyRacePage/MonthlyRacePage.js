@@ -6,14 +6,14 @@ function MonthlyRacePage() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [raceData, setRaceData] = useState([
-    { id: 1, title: 'GM', name: 'Константин Путилов', score: 89050000 },
-    { id: 2, title: 'SE', name: 'Дмитрий Салихов', score: 58250000 },
-    { id: 3, title: 'SE', name: 'Юлия Шакирова', score: 45390000 },
-    { id: 4, title: 'SE', name: 'Сурия Пашаева', score: 42170000 },
-    { id: 5, title: 'SE', name: 'Алик Карапетян', score: 39000000 },
-    { id: 6, title: 'SE', name: 'Данияр Балтабаев', score: 35175000 },
-    { id: 7, title: 'SE', name: 'Мурад Пашаев', score: 34200000 },
-  ]);
+  { id: 1, title: 'GM', name: 'Артём Волков', score: 92400000 },
+  { id: 2, title: 'SE', name: 'Мария Петрова', score: 67300000 },
+  { id: 3, title: 'SE', name: 'Рустам Алиев', score: 58900000 },
+  { id: 4, title: 'SE', name: 'Анна Соколова', score: 51200000 },
+  { id: 5, title: 'SE', name: 'Илья Морозов', score: 46700000 },
+  { id: 6, title: 'SE', name: 'Лейла Гусейнова', score: 41500000 },
+  { id: 7, title: 'SE', name: 'Егор Кузнецов', score: 37800000 },
+]);
 
   // Фильтрация по имени
   const filteredData = raceData.filter(item =>
