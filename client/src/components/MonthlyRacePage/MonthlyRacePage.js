@@ -37,7 +37,7 @@ function MonthlyRacePage() {
 
   <div style={{ overflowX: 'auto' }}>
     <table className="monthly-race-table">
-      <thead>
+      <thead className="thead">
         <tr>
           <th>№</th>
           <th>Титул</th>
