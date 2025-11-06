@@ -16,9 +16,9 @@ const AdminPage = ({ onLogout }) => {
           {/* Верхний блок */}
         <div class="top-section">
             <div class="top-buttons">
-             <button onClick={() => navigate('/rating')} className="bottom-section-button">Рейтинг</button>
-             <button onClick={() => navigate('/')} className="bottom-section-button">Гонка месяца</button>
-             <button onClick={() => navigate('/')} className="bottom-section-button">Прошедшие игры</button>
+             <button onClick={() => navigate('/rating')} className="bottom-section-buttonad">Рейтинг</button>
+             <button onClick={() => navigate('/')} className="bottom-section-buttonad">Гонка месяца</button>
+             <button onClick={() => navigate('/')} className="bottom-section-buttonad">Прошедшие игры</button>
             </div>
         </div>
     </>
