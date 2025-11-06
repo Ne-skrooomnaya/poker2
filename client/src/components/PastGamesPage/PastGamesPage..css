@@ -1,0 +1,89 @@
+.past-games-page {
+  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+  color: white;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+}
+
+.past-games-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  text-shadow: 0 0 10px rgba(255,255,255,0.5);
+}
+
+.past-games-filters {
+  background: #333;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.past-games-filters h3 {
+  margin: 0 0 10px 0;
+}
+
+.past-games-filters label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.past-games-filters input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  fontSize: 16px;
+  border: 1px solid #ccc;
+  borderRadius: 4px;
+}
+
+.past-games-game {
+  background: #222;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.past-games-game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.past-games-game-header h3 {
+  margin: 0;
+}
+
+.past-games-players {
+  background: #333;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.past-games-player {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #444;
+}
+
+.past-games-player .title-badge {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 20px;
+  font-weight: bold;
+  color: white;
+}
+
+.past-games-player .title-gm {
+  background: #FF5722;
+}
+
+.past-games-player .title-se {
+  background: #E91E63;
+}
