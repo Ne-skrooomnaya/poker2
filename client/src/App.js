@@ -55,8 +55,10 @@ function App() {
           path="/admin"
           element={<ProtectedRoute element={AdminPage} user={user} allowedRoles={['admin']} fallbackPath="/" />}
         />
-        <Route path="/monthly-race" element={<MonthlyRacePage />} />
-        {/* Страница рейтинга - универсальная */}
+        <Route 
+        path="/monthly-race" 
+        element={<ProtectedRoute element={MonthlyRacePage} user={user} fallbackPath="/" />}
+        />
         <Route
           path="/rating"
           element={<ProtectedRoute element={RatingPage} user={user} fallbackPath="/" />}
