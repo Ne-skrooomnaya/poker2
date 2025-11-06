@@ -33,7 +33,10 @@ function UserRatingPage({ user }) {
   // Фильтруем рейтинги по имени пользователя
   const filteredRatings = ratings.filter(rating => {
     const user = users[rating.userId]; // находим пользователя по userId
-    if (!user) return false;
+    if (!user) {
+  console.log('Не найден пользователь для rating.userId:', rating.userId);
+  return true; // или false — зависит от того, хочешь ли ты показывать таких пользователей
+}
 
     const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim().toLowerCase();
     const username = user.username?.toLowerCase() || '';
