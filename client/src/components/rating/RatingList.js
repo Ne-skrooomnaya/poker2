@@ -1,57 +1,28 @@
 // client/src/components/rating/RatingList.js
 
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React from 'react';
 import './RatingList.css';
 
-const BACKEND_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
-
-function RatingList({ title, refreshKey = 0, ratings: externalRatings, users: externalUsers }) {
-  const [ratingData, setRatingData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    if (externalRatings === undefined) {
-      const fetchRatingData = async () => {
-        try {
-          setLoading(true);
-          setError(null);
-          const response = await axios.get(`${BACKEND_URL}/rating`);
-          setRatingData(response.data);
-        } catch (err) {
-          console.error("Ошибка при загрузке рейтинга:", err);
-          setError("Не удалось загрузить рейтинг. Попробуйте позже.");
-        } finally {
-          setLoading(false);
-        }
-      };
-      fetchRatingData();
-    } else {
-      setLoading(false);
-    }
-  }, [refreshKey, externalRatings]);
-
-  const dataToShow = externalRatings !== undefined ? externalRatings : ratingData;
-
+function RatingList({ title, combinedList, users }) {
   return (
     <div className="rating-container">
       {title && <h2 className="rating-title">{title}</h2>}
 
-      {loading && <p className="rating-loading">Загрузка рейтинга...</p>}
-      {error && <p className="rating-error">{error}</p>}
+      {/* Нет загрузки, потому что данные уже переданы */}
+      {!combinedList && <p className="rating-loading">Загрузка рейтинга...</p>}
+      {!combinedList && <p className="rating-error">Ошибка при загрузке рейтинга.</p>}
 
-      {!loading && !error && (
+      {combinedList && (
         <div>
-          {dataToShow.length > 0 ? (
+          {combinedList.length > 0 ? (
             <ul className="rating-list">
-              {dataToShow.map((item, index) => {
+              {combinedList.map((item, index) => {
                 let displayName = 'Неизвестный пользователь';
                 if (item.isStatic) {
                   displayName = item.name;
                 } else {
-                  if (externalUsers && item.userId) {
-                    const user = externalUsers[item.userId];
+                  if (users && item.userId) {
+                    const user = users[item.userId];
                     if (user) {
                       displayName = `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.username || 'Без имени';
                     }
@@ -61,7 +32,7 @@ function RatingList({ title, refreshKey = 0, ratings: externalRatings, users: ex
                 }
 
                 return (
-                  <li key={item._id || item.userId || `static-${index}`} className="rating-item">
+                  <li key={item.id || index} className="rating-item">
                     <span className="rating-name">
                       {index + 1}. {displayName}
                     </span>
