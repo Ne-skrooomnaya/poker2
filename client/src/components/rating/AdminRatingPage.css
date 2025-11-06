@@ -1,6 +1,5 @@
 /* Общая тема */
 .admin-panel {
-  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
   color: white;
   padding: 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -66,7 +65,7 @@
 }
 
 .search-input {
-  width: 100%;
+  width: 90%;
   padding: 12px;
   font-size: 16px;
   border: 2px solid #493f3fff;
@@ -126,8 +125,7 @@
 }
 
 .score-input {
-  width: 100%;
-  max-width: 200px;
+  width: 90%;
   padding: 12px;
   font-size: 16px;
   border: 2px solid #493f3fff;
