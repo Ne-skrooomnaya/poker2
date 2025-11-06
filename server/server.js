@@ -32,7 +32,7 @@ app.use(cors({
 const authRoutes = require('./routes/auth.routes');
 const userRoutes = require('./routes/user.routes');
 const ratingRoutes = require('./routes/rating.routes');
-// const adminRoutes = require('./routes/admin.routes');
+const adminRoutes = require('./routes/admin.routes');
 
 app.use('/auth', authRoutes); // Например, /auth/login
 // const authRoutes = require('./routes/auth.routes');
@@ -44,7 +44,7 @@ app.use('/auth', authRoutes); // Например, /auth/login
 //   }
 app.use('/users', userRoutes); // Например, /users
 app.use('/rating', ratingRoutes); // Например, /rating
-// app.use('/admin', adminRoutes); // Например, /admin/update-rating
+app.use('/admin', adminRoutes); // Например, /admin/update-rating
 
 // --- Обслуживание статических файлов фронтенда ---
 // Путь к папке 'build' вашего React-приложения
