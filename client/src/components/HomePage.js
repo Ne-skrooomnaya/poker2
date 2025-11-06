@@ -13,7 +13,11 @@ function HomePage() {
     if (!loading && user) {
       // Перенаправляем пользователя после успешного входа
       // Например, на главную страницу приложения или страницу рейтинга
-      navigate('/rating'); // Или '/dashboard', '/app' и т.д.
+      if (user.role === 'admin') {
+  navigate('/admin');
+} else {
+  navigate('/user');
+} // Или '/dashboard', '/app' и т.д.
     } else if (!loading && telegramUser && !user) {
       // Если данные Telegram есть, но бэкенд не вернул пользователя (ошибка логина)
       // Можно показать сообщение об ошибке пользователю
