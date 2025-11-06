@@ -24,76 +24,62 @@ const ProtectedRoute = ({ element: Element, user, allowedRoles, fallbackPath = "
     };
 
 function App() {
-  // useTelegram должен возвращать:
-  // user: данные пользователя с бэкенда (включая роль), если авторизован
-  // loading: булево значение, показывающее, идет ли сейчас процесс аутентификации
-  // telegramUser: данные пользователя от Telegram API (могут быть полезны для инициализации)
   const { user, loading, telegramUser } = useTelegram();
-
-  // Логика перенаправления после успешного логина
-  // Можно сделать так, чтобы после входа пользователя перенаправляло на RatingPage,
-  // а админа - на AdminPage
-  // const getInitialRedirectPath = () => {
-  //   if (user) {
-  //     return user.role === 'admin' ? '/admin' : '/rating';
-  //   }
-  //   return '/'; // Если пользователь еще не авторизован, остаемся на главной
-  // };
 
   if (loading) {
     return <LoadingPage />;
   }
 
   return (
-        <Router>
-          <Routes>
-            {/* Главная страница - доступна для входа */}
-            <Route path="/" element={<HomePage />} />
+    <Router>
+      <Routes>
+        {/* Главная страница - доступна для входа */}
+        <Route path="/" element={<HomePage />} />
 
-            {/* Если пользователь авторизован, показываем его путь */}
-            {user && (
-              <>
-                {/* Перенаправление после успешного логина */}
-                <Route path="/welcome" element={<Navigate to={user.role === 'admin' ? '/admin' : '/user'} replace />} />
-                {/* Или можно просто сделать перенаправление с "/" на нужную страницу */}
-              </>
-            )}
-            {/* Главная страница пользователя */}
-            <Route
-              path="/user"
-              element={<ProtectedRoute element={UserPage} user={user} fallbackPath="/" />}
+        {/* Перенаправление после логина */}
+        {user && (
+          <>
+            <Route 
+              path="/welcome" 
+              element={<Navigate to={user.role === 'admin' ? '/admin' : '/user'} replace />} 
             />
+          </>
+        )}
 
-            {/* Главная страница администратора */}
-            <Route
-              path="/admin"
-              element={<ProtectedRoute element={AdminPage} user={user} allowedRoles={['admin']} fallbackPath="/" />}
-            />
-            {/* Страница рейтинга - доступна всем авторизованным пользователям */}
-            <Route
-              path="/rating"
-              element={<ProtectedRoute element={RatingPage} user={user} fallbackPath="/" />}
-            />
+        {/* Новые главные страницы */}
+        <Route
+          path="/user"
+          element={<ProtectedRoute element={UserPage} user={user} fallbackPath="/" />}
+        />
+        <Route
+          path="/admin"
+          element={<ProtectedRoute element={AdminPage} user={user} allowedRoles={['admin']} fallbackPath="/" />}
+        />
 
-            {/* Страница админского рейтинга - доступна только админам */}
-            <Route
-              path="/admin/rating"
-              element={<ProtectedRoute element={AdminRatingPage} user={user} allowedRoles={['admin']} fallbackPath="/" />}
-            />
+        {/* Страница рейтинга - универсальная */}
+        <Route
+          path="/rating"
+          element={<ProtectedRoute element={RatingPage} user={user} fallbackPath="/" />}
+        />
 
-            {/* Если пользователь авторизован, но пытается зайти на несуществующую страницу, перенаправляем */}
-            {user && (
-                <Route path="*" element={<Navigate to={user.role === 'admin' ? '/admin' : '/user'} replace />} />
-            )}
+        {/* Админский рейтинг — пока оставим (на случай прямого захода) */}
+        <Route
+          path="/admin/rating"
+          element={<ProtectedRoute element={AdminRatingPage} user={user} allowedRoles={['admin']} fallbackPath="/" />}
+        />
 
-             {/* Если пользователь не авторизован и пытается зайти на защищенную страницу */}
-             {/* Этот маршрут нужен, если Navigate в ProtectedRoute ведет на "/", а нам надо, чтобы главная была "/" */}
-            {!user && (
-                 <Route path="*" element={<Navigate to="/" replace />} />
-            )}
-          </Routes>
-        </Router>
-      );
-    }
+        {/* Fallback для авторизованных */}
+        {user && (
+          <Route path="*" element={<Navigate to={user.role === 'admin' ? '/admin' : '/user'} replace />} />
+        )}
 
-    export default App;
+        {/* Fallback для неавторизованных */}
+        {!user && (
+          <Route path="*" element={<Navigate to="/" replace />} />
+        )}
+      </Routes>
+    </Router>
+  );
+}
+
+export default App;
