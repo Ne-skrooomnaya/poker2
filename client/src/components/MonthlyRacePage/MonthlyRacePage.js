@@ -1,7 +1,7 @@
 // client/src/components/MonthlyRacePage.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import 'MonthlyRacePage.css'
+import './MonthlyRacePage.css'
 function MonthlyRacePage() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
