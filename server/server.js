@@ -55,7 +55,7 @@ app.use(express.static(frontendBuildPath));
 
 // Важно: Этот маршрут должен быть ПОСЛЕ всех ваших API маршрутов и express.static
 app.get(/.*/, (req, res) => { // Использование регулярного выражения для "любого маршрута"
-  res.sendFile(path.resolve(frontendBuildPath, 'index.html'));
+  res.sendFile(path.join(frontendBuildPath, 'index.html'));
 });
 
 // ... (остальной код)
