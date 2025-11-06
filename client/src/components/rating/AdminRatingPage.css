@@ -165,15 +165,16 @@
 
 .btn-primary {
   padding: 12px 20px;
-  background: linear-gradient(135deg, #007bff, #0056b3);
   color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   font-size: 16px;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
   min-width: 200px;
+    background: linear-gradient(135deg, #007bff, #0056b3);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
 .btn-primary:hover {
@@ -184,21 +185,24 @@
 
 .btn-danger {
   padding: 12px 20px;
-  background: linear-gradient(135deg, #dc3545, #c82333);
   color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   font-size: 16px;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
   min-width: 200px;
+    transition: all 0.3s ease;
+  min-width: 200px;
+    background: linear-gradient(135deg, #ff0000, #b32700);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
 .btn-danger:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(0,0,0,0.3);
-  background: linear-gradient(135deg, #c82333, #a71d2a);
+  background: linear-gradient(135deg, #0056b3, #003d80);
 }
 
 /* Разделитель */
