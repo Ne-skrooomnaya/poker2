@@ -1,56 +1,67 @@
-// client/src/pages/UserRatingPage.js
+// client/src/components/UserRatingPage.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import RatingList from './RatingList';
-const BACKEND_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000'; // Эта константа здесь больше не нужна, но оставлена на случай, если у вас есть другие запросы
 
-function UserRatingPage({ user }) {
+const BACKEND_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
+function UserRatingPage() {
   const navigate = useNavigate();
   const [ratings, setRatings] = useState([]);
   const [users, setUsers] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Получаем все рейтинги
+  // Загрузка рейтингов
   useEffect(() => {
     fetch(`${BACKEND_URL}/rating`)
-      .then(res => res.json())
-      .then(data => setRatings(data));
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to fetch rating');
+        return res.json();
+      })
+      .then(data => setRatings(data))
+      .catch(err => console.error('Error loading rating:', err));
   }, []);
 
-  // Получаем всех пользователей (один раз)
+  // Загрузка пользователей
   useEffect(() => {
     fetch(`${BACKEND_URL}/users`)
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to fetch users');
+        return res.json();
+      })
       .then(data => {
         const userMap = {};
         data.forEach(user => {
-          userMap[user._id] = user; // ключ — userId (ObjectId)
+          userMap[user._id] = user;
         });
         setUsers(userMap);
-      });
+      })
+      .catch(err => console.error('Error loading users:', err));
   }, []);
 
-  // Фильтруем рейтинги по имени пользователя
-  const filteredRatings = ratings.filter(rating => {
-  const user = users[rating.userId];
-  if (!user) {
-    console.warn(`Пользователь с userId=${rating.userId} не найден в users`);
-    // Не удаляем, просто помечаем как "Неизвестный"
-    return true;
-  }
+  // Фильтрация с защитой от гонок и undefined
+  const filteredRatings = React.useMemo(() => {
+    return ratings.filter(rating => {
+      const user = users[rating.userId];
+      if (!user) {
+        // Теоретически не должно происходить, но на всякий случай оставляем запись
+        return true;
+      }
 
-  const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim().toLowerCase();
-  const username = user.username?.toLowerCase() || '';
+      const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim().toLowerCase();
+      const username = (user.username || '').toLowerCase();
+
+      return (
+        fullName.includes(searchTerm.toLowerCase()) ||
+        username.includes(searchTerm.toLowerCase())
+      );
+    });
+  }, [ratings, users, searchTerm]);
 
   return (
-    fullName.includes(searchTerm.toLowerCase()) ||
-    username.includes(searchTerm.toLowerCase())
-  );
-});
-    return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-      <h1 style={{ color: '#333', marginBottom: '20px' }}>Рейтинг Пользователей</h1>
-       {/* Кнопка "Назад" */}
+      <h1>Рейтинг Пользователей</h1>
+
       <button
         onClick={() => navigate('/user')}
         style={{
@@ -62,7 +73,7 @@ function UserRatingPage({ user }) {
       >
         ← Назад
       </button>
-         {/* Поле поиска */}
+
       <input
         type="text"
         placeholder="Поиск по имени или никнейму..."
@@ -72,19 +83,19 @@ function UserRatingPage({ user }) {
           width: '100%',
           padding: '10px',
           marginBottom: '20px',
-          fontSize: '16px'
+          fontSize: '16px',
+          border: '1px solid #ccc',
+          borderRadius: '4px'
         }}
       />
 
-      {/* Передаём отфильтрованные рейтинги в RatingList */}
       <RatingList
-  title="Рейтинг участников"
-  ratings={filteredRatings}
-  users={users} // ← карта: { [userId]: user }
-/>
+        title="Рейтинг участников"
+        ratings={filteredRatings}
+        users={users}
+      />
+    </div>
+  );
+}
 
-        </div>
-      );
-    }
-
-    export default UserRatingPage;
+export default UserRatingPage;
