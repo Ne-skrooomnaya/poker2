@@ -19,6 +19,7 @@ function RatingList({ title, refreshKey = 0, ratings: externalRatings, users: ex
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  
   // Если внешние данные НЕ переданы — запрашиваем сами (старое поведение)
 useEffect(() => {
     if (externalRatings === undefined) {

@@ -48,6 +48,7 @@ function AdminRatingPage({ user }) {
         score: score,
       });
       setMessage(response.data.message);
+
       setRefreshRatingList(prev => prev + 1);
     } catch (error) {
       console.error("Error updating rating:", error);
@@ -206,7 +207,7 @@ function AdminRatingPage({ user }) {
 
       <RatingList
         title="Текущий Рейтинг Пользователей"
-        refreshTrigger={[refreshRatingList]}
+        refreshKey={refreshRatingList} // ← передаём число
       />
     </div>
   );

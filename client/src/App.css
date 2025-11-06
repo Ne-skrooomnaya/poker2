@@ -1,3 +1,12 @@
+/* Глобальный сброс стилей текста для Telegram WebApp */
+input,
+textarea,
+select,
+button {
+  color: black !important;
+  background-color: white !important;
+  border: 1px solid #ccc !important;
+}
 .App {
   text-align: center;
 
