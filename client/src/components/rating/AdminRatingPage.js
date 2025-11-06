@@ -121,7 +121,7 @@ function AdminRatingPage({ user }) {
               setSearchTerm(e.target.value);
               setShowDropdown(true);
             }}
-            placeholder="Начните вводить имя или username..."
+            placeholder="введите имя или username..."
             className="search-input"
           />
 
