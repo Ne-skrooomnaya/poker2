@@ -62,7 +62,7 @@ function MonthlyRacePage() {
     </table>
   </div>
 
-  <button onClick={() => navigate('/user')} className="btn-back">
+  <button onClick={() => navigate('/user')} className="btn-backg">
     ← Назад
   </button>
 </div>
