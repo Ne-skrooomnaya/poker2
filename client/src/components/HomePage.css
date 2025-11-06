@@ -129,25 +129,24 @@ font-size: 16px;
 }
 
 .top-buttons button {
-    background: linear-gradient(135deg, rgb(20, 129, 255), rgba(62, 57, 93, 0.7)); /* Градиент, близкий к фону секции */
+background: linear-gradient(135deg, rgb(20, 129, 255), rgba(62, 57, 93, 0.7));
     color: #fff;
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    transition: background-color 0.3s ease, /* Плавный переход цвета фона */
-                box-shadow 0.3s ease, /* Плавный переход тени */
-                transform 0.2s ease; /* Плавный переход трансформации */
+    transition: background-color 0.3s 
+ease, /* Плавный переход цвета фона */ box-shadow 0.3s 
+ease, /* Плавный переход тени */ transform 0.2s 
+ease;
     font-size: 16px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.3), /* Уменьшенная тень */
-                inset 0 1px 3px rgba(255,255,255,0.1); /* Уменьшенный блик */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), inset 0 1px 3px rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .top-buttons button:hover {
-    background: linear-gradient(135deg, rgba(64, 0, 255, 0.186), rgba(74, 68, 122, 0.7)); /* Более светлый градиент при наведении */
-    box-shadow: 0 3px 6px rgba(0,0,0,0.4), /* Усиленная тень при наведении */
-                inset 0 2px 5px rgba(255,255,255,0.15); /* Усиленный блик при наведении */
-    transform: translateY(-2px); /* Поднимаем кнопку при наведении */
+background: linear-gradient(135deg, rgba(64, 0, 255, 0.186), rgba(74, 68, 122, 0.7));
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4), inset 0 2px 5px rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
 }
 
 .top-buttons button:active {
@@ -178,29 +177,32 @@ font-size: 16px;
 }
 
 .bottom-section-button {
-  background: linear-gradient(135deg, rgb(20, 129, 255), rgba(62, 57, 93, 0.7));
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background-color 0.3s ease,
-        box-shadow 0.3s ease,
-        transform 0.2s ease;
-  font-size: 16px;
-  width: 100%;
-                   text-align: center;
-
-  padding: 12px 24px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.3),
-        inset 0 1px 3px rgba(255,255,255,0.1);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  max-width: 400px;
+    max-height: 90px;
+    min-width: 110px;
+    min-height: 60px;
+    border-radius: 5px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, rgb(20, 129, 255), rgba(37, 17, 58, 0.81));
+    color: #fff;
+    font-size: 18px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), inset 0 1px 3px rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    transition: background-color 0.3s 
+ease, /* Плавный переход цвета фона */ box-shadow 0.3s 
+ease, /* Плавный переход тени */ transform 0.2s 
+ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
 .bottom-section-button:hover {
-  background: linear-gradient(135deg, rgb(37, 182, 255), rgba(82, 76, 107, 0.8));
-  box-shadow: 0 3px 6px rgba(0,0,0,0.4),
-        inset 0 2px 5px rgba(255,255,255,0.2);
-  transform: translateY(-1px);
+background: linear-gradient(135deg, rgba(64, 0, 255, 0.186), rgba(74, 68, 122, 0.7));
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4), inset 0 2px 5px rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
 }
 
 .bottom-section-button:active {

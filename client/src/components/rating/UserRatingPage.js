@@ -30,22 +30,21 @@ function UserRatingPage() {
   }, []);
 
   // Фильтрация с защитой от гонок
-  const filteredRatings = useMemo(() => {
-    if (!searchTerm.trim()) return ratings; // показываем всё, если поиск пустой
+  const filteredRatings = ratings.filter(rating => {
+  const user = users[rating.userId];
+  if (!user) return false;
+console.log('Filtered ratings:', filteredRatings.map(r => users[r.userId]?.username));
+  const searchLower = searchTerm.toLowerCase();
+  const textToSearch = [
+    user.firstName,
+    user.lastName,
+    user.username,
+    user.telegramId
+  ].filter(Boolean).join(' ').toLowerCase();
+console.log('Search term:', searchTerm);
 
-    return ratings.filter(rating => {
-      const user = users[rating.userId];
-      if (!user) return false; // если пользователя нет — не показываем
-
-      const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim().toLowerCase();
-      const username = (user.username || '').toLowerCase();
-
-      return (
-        fullName.includes(searchTerm.toLowerCase()) ||
-        username.includes(searchTerm.toLowerCase())
-      );
-    });
-  }, [ratings, users, searchTerm]);
+  return textToSearch.includes(searchLower);
+});
 
   return (
     <div style={{ padding: '20px' }}>
