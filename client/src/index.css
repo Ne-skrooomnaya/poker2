@@ -1,3 +1,11 @@
+input,
+textarea,
+button,
+select {
+  color: var(--tg-theme-text-color, black);
+  background-color: var(--tg-theme-bg-color, white);
+  border: 1px solid rgba(0,0,0,0.2);
+}
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',

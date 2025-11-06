@@ -10,6 +10,13 @@ function useTelegram() {
   const [loading, setLoading] = useState(true);
   const [telegramUser, setTelegramUser] = useState(null); // Для хранения данных из Telegram
 
+  useEffect(() => {
+  const tg = window.Telegram?.WebApp;
+  if (tg) {
+    document.documentElement.style.setProperty('--tg-theme-text-color', tg.textColor || '#000000');
+    document.documentElement.style.setProperty('--tg-theme-bg-color', tg.bgColor || '#ffffff');
+  }
+}, []);
   // Хук для инициализации Telegram Web App
       useEffect(() => {
         if (!tg) {

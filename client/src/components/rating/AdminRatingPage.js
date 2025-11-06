@@ -134,7 +134,7 @@ const filteredUsers = users.filter(user =>
   />
 
   {showDropdown && (
-    <ul
+    <ul className='spisok'
       style={{
         position: 'absolute',
         zIndex: 1000,
@@ -160,17 +160,18 @@ const filteredUsers = users.filter(user =>
               setSelectedUser(user);
               setSearchTerm(`${user.firstName || ''} ${user.lastName || ''}`.trim() || user.username || '');
               setShowDropdown(false);
-            }}
+            }}className='spisok'
             style={{
               padding: '10px',
               cursor: 'pointer',
               backgroundColor: '#7c4949ff',
+              
               borderBottom: '1px solid #f0f0f0'
             }}
             onMouseEnter={(e) => e.target.style.backgroundColor = '#f9f9f9'}
             onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
           >
-            <strong>{user.firstName || user.username || 'Без имени'}</strong>
+            <strong className='spisok'>{user.firstName || user.username || 'Без имени'}</strong>
             {user.lastName && ` ${user.lastName}`}
             {user.username && ` (@${user.username})`}
           </li>
