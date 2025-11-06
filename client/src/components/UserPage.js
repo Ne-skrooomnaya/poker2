@@ -12,7 +12,7 @@ const UserPage = ({ onLogout }) => {
     <>
         {/* Логотип */}
         <div className="logo-container">
-            <img src={волк} alt="Poker Logo" />
+            <img src={волк} lassName="logo" alt="Poker Logo" />
         </div>
         {/* Верхний блок */}
         <div class="top-section">
