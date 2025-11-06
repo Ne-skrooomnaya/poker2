@@ -1,13 +1,49 @@
 // client/src/pages/UserRatingPage.js
-import React from 'react'; // axios, useState, useEffect больше не нужны здесь
-import { useNavigate } from 'react-router-dom'; // ← Добавь это
-import RatingList from './RatingList'; // Импортируем новый компонент
-
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import RatingList from './RatingList';
 //const BACKEND_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000'; // Эта константа здесь больше не нужна, но оставлена на случай, если у вас есть другие запросы
 
 function UserRatingPage({ user }) {
-    const navigate = useNavigate(); 
-  return (
+  const navigate = useNavigate();
+  const [ratings, setRatings] = useState([]);
+  const [users, setUsers] = useState({});
+  const [searchTerm, setSearchTerm] = useState('');
+
+  // Получаем все рейтинги
+  useEffect(() => {
+    fetch('/api/rating')
+      .then(res => res.json())
+      .then(data => setRatings(data));
+  }, []);
+
+  // Получаем всех пользователей (один раз)
+  useEffect(() => {
+    fetch('/api/users')
+      .then(res => res.json())
+      .then(data => {
+        const userMap = {};
+        data.forEach(user => {
+          userMap[user._id] = user; // ключ — userId (ObjectId)
+        });
+        setUsers(userMap);
+      });
+  }, []);
+
+  // Фильтруем рейтинги по имени пользователя
+  const filteredRatings = ratings.filter(rating => {
+    const user = users[rating.userId]; // находим пользователя по userId
+    if (!user) return false;
+
+    const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim().toLowerCase();
+    const username = user.username?.toLowerCase() || '';
+
+    return (
+      fullName.includes(searchTerm.toLowerCase()) ||
+      username.includes(searchTerm.toLowerCase())
+    );
+  });
+    return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
       <h1 style={{ color: '#333', marginBottom: '20px' }}>Рейтинг Пользователей</h1>
        {/* Кнопка "Назад" */}
@@ -22,27 +58,27 @@ function UserRatingPage({ user }) {
       >
         ← Назад
       </button>
-        <RatingList />
-      {/* Вставляем компонент RatingList сюда */}
-      {/* Заголовок H1 уже есть, поэтому для RatingList можно не указывать title, или указать другой, например "Общий рейтинг" как H2 */}
+         {/* Поле поиска */}
+      <input
+        type="text"
+        placeholder="Поиск по имени или никнейму..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        style={{
+          width: '100%',
+          padding: '10px',
+          marginBottom: '20px',
+          fontSize: '16px'
+        }}
+      />
 
-      {user && user.role === 'admin' && (
-            <button
-              onClick={() => window.location.href = '/admin'}
-              style={{
-                marginTop: '20px',
-                padding: '10px 15px',
-                backgroundColor: '#007bff',
-                color: 'white',
-                border: 'none',
-                borderRadius: '5px',
-                cursor: 'pointer',
-                fontSize: '16px',
-              }}
-            >
-              Перейти в Админку
-            </button>
-          )}
+      {/* Передаём отфильтрованные рейтинги в RatingList */}
+      <RatingList
+  title="Рейтинг участников"
+  ratings={filteredRatings}
+  users={users} // ← карта: { [userId]: user }
+/>
+
         </div>
       );
     }
