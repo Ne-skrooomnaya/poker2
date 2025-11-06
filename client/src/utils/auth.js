@@ -61,8 +61,17 @@
             throw error;
         }
     };
-    export const checkAuth = async (userId) => {
-  const res = await fetch(`/api/auth/check?userId=${userId}`);
-  if (!res.ok) throw new Error('Auth failed');
-  return await res.json(); // должен содержать { id, isAdmin: true/false }
+// client/src/utils/auth.js
+
+export const checkAuth = async (userId) => {
+  try {
+    const res = await fetch(`/api/auth/check?userId=${userId}`);
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}: ${await res.text()}`);
+    }
+    return await res.json(); // ← если здесь ошибка — значит, сервер вернул не JSON
+  } catch (err) {
+    console.error('Auth check failed:', err);
+    throw err; // чтобы App.js знал, что авторизация не удалась
+  }
 };

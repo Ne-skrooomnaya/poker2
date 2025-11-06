@@ -39,7 +39,8 @@ function App() {
 
   // Не авторизован — показываем HomePage (вход/ошибка)
   if (!user) return <HomePage />;
-
+// В useEffect после получения user:
+console.log('User data:', user); // ← смотри, есть ли isAdmin?
   // Авторизован — роутим по ролям
   return (
     <Router>

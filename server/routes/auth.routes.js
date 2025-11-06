@@ -2,7 +2,9 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user.model'); // Предполагается, что у вас есть модель User
+const { checkAuth } = require('../controllers/auth.controller');
 
+router.get('/check', checkAuth); // ← вот это важно!
 // POST /auth/login
 // Принимает данные пользователя из Telegram и либо находит существующего,
 // либо создает нового пользователя.
