@@ -1,11 +1,13 @@
 // client/src/components/AdminPage.js
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './AdminPage.css';
 import { Link } from 'react-router-dom';
 import './HomePage.css';
 import logo from './images/logo.svg'; // Импортируйте ваш логотип
 
 const AdminPage = ({ onLogout }) => {
+  const navigate = useNavigate();
   return (
     <>
     {/* Логотип */}
@@ -16,9 +18,9 @@ const AdminPage = ({ onLogout }) => {
 
            
            <div className="bottom-section">
-             <Link to="/rating" className="t">
-               <button className="bottom-section-button">Рейтинг</button>
-             </Link>
+             <button onClick={() => navigate('/rating')}>
+  Рейтинг
+</button>
              <Link to="/rating" className="t">
              <button className="bottom-section-button">Гонка месяца</button></Link>
              <Link to="/rating" className="t">

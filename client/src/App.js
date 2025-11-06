@@ -2,7 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import useTelegram from './hooks/useTelegram'; // Убедитесь, что путь правильный
-
+import UserPage from './components/UserPage';
+import AdminPage from './components/AdminPage';
 import HomePage from './components/HomePage'; // Ваша главная страница (где происходит вход/регистрация)
 import RatingPage from './components/RatingPage'; // Ваша страница рейтинга
 import AdminRatingPage from './components/rating/AdminRatingPage'; // Страница админки
@@ -53,11 +54,21 @@ function App() {
             {user && (
               <>
                 {/* Перенаправление после успешного логина */}
-                <Route path="/welcome" element={<Navigate to={user.role === 'admin' ? '/admin/rating' : '/rating'} replace />} />
+                <Route path="/welcome" element={<Navigate to={user.role === 'admin' ? '/admin' : '/user'} replace />} />
                 {/* Или можно просто сделать перенаправление с "/" на нужную страницу */}
               </>
             )}
+            {/* Главная страница пользователя */}
+            <Route
+              path="/user"
+              element={<ProtectedRoute element={UserPage} user={user} fallbackPath="/" />}
+            />
 
+            {/* Главная страница администратора */}
+            <Route
+              path="/admin"
+              element={<ProtectedRoute element={AdminPage} user={user} allowedRoles={['admin']} fallbackPath="/" />}
+            />
             {/* Страница рейтинга - доступна всем авторизованным пользователям */}
             <Route
               path="/rating"
@@ -72,7 +83,7 @@ function App() {
 
             {/* Если пользователь авторизован, но пытается зайти на несуществующую страницу, перенаправляем */}
             {user && (
-                <Route path="*" element={<Navigate to={user.role === 'admin' ? '/admin/rating' : '/rating'} replace />} />
+                <Route path="*" element={<Navigate to={user.role === 'admin' ? '/admin' : '/user'} replace />} />
             )}
 
              {/* Если пользователь не авторизован и пытается зайти на защищенную страницу */}
