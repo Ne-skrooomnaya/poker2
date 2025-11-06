@@ -102,7 +102,7 @@
   left: 0;
   right: 0;
   background: white;
-  border: 1px solid #704141ff;
+  border: 1px solid rgb(42, 36, 87);
   border-radius: 8px;
   max-height: 200px;
   overflow-y: auto;
@@ -116,7 +116,7 @@
 .dropdown-item {
   padding: 12px 20px;
   cursor: pointer;
-  background: #7c4949ff;
+  background: rgb(36, 39, 93);
   border-bottom: 1px solid #f0f0f0;
   color: white;
   transition: background 0.2s ease;
@@ -124,11 +124,11 @@
 
 .dropdown-item:hover {
   background: #f9f9f9;
-  color: #333;
+  color: #000000;
 }
 
 .dropdown-item.no-match {
-  color: #373131ff;
+  color: rgb(0, 0, 0);
   text-align: center;
   padding: 15px;
   background: #f9f9f9;
