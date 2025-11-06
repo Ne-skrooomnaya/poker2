@@ -194,7 +194,7 @@
   min-width: 200px;
     transition: all 0.3s ease;
   min-width: 200px;
-    background: linear-gradient(135deg, #ff0000, #b32700);
+    background: linear-gradient(135deg, #ff0000, #510606);
   transition: all 0.3s ease;
   box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
@@ -202,7 +202,7 @@
 .btn-danger:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(0,0,0,0.3);
-  background: linear-gradient(135deg, #0056b3, #003d80);
+  background: linear-gradient(135deg, #b30000, #800000);
 }
 
 /* Разделитель */
