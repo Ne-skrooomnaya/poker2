@@ -1,260 +1,230 @@
-    AdminRatingPage.css
-
-.admin-rating-page {
-    padding: 20px;
-    font-family: 'Arial', sans-serif;
-    color: #333;
+/* Общая тема */
+.admin-panel {
+  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+  color: white;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
 }
 
-h1 {
-    text-align: center;
-    margin-bottom: 30px;
-    color: #0056b3;
+.admin-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  text-shadow: 0 0 10px rgba(255,255,255,0.5);
 }
 
-.loading-indicator, .error-message {
-    text-align: center;
-    margin-top: 50px;
-    font-size: 1.2em;
-}
-.spisok {
-    color: rgb(26, 181, 103);
-}
-.error-message {
-    color: red;
+.admin-message {
+  text-align: center;
+  padding: 10px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-weight: bold;
 }
 
-.date-editor-container {
-    display: flex;
-    align-items: center;
-    gap: 15px; /* Расстояние между элементами */
-    margin-bottom: 20px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    max-width: 400px; /* Ограничим ширину для лучшего вида */
-    margin-left: auto;
-    margin-right: auto;
+.admin-section {
+  background: rgba(255,255,255,0.05);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
 }
 
-.date-editor-container span {
-    font-weight: bold;
-    color: #555;
+.section-title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
 }
 
-.current-date-display {
-    color: #007bff;
-    font-size: 1.1em;
+/* Кнопка "Назад" */
+.btn-back {
+  display: block;
+  width: 100%;
+  max-width: 200px;
+  margin: 0 auto 20px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
-.edit-date-button, .save-date-button {
-    padding: 8px 15px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
+.btn-back:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+  background: linear-gradient(135deg, #0056b3, #003d80);
 }
 
-.edit-date-button:hover, .save-date-button:hover {
-    background-color: #0056b3;
+/* Поиск */
+.search-container {
+  position: relative;
+  margin-bottom: 20px;
 }
 
-.date-input-field {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1em;
-    color: #333;
+.search-input {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: 2px solid #493f3fff;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.1);
+  color: white;
+  transition: border-color 0.3s ease;
+  outline: none;
 }
 
-.add-player-button {
-    display: block;
-    margin: 20px auto;
-    padding: 10px 20px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1em;
-    transition: background-color 0.2s ease;
+.search-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0,123,255,0.2);
 }
 
-.add-player-button:hover {
-    background-color: #218838;
+.dropdown-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #704141ff;
+  border-radius: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
-.rating-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 30px;
+.dropdown-item {
+  padding: 12px 20px;
+  cursor: pointer;
+  background: #7c4949ff;
+  border-bottom: 1px solid #f0f0f0;
+  color: white;
+  transition: background 0.2s ease;
 }
 
-.rating-table th, .rating-table td {
-    border: 1px solid #ddd;
-    padding: 12px;
-    text-align: left;
+.dropdown-item:hover {
+  background: #f9f9f9;
+  color: #333;
 }
 
-.rating-table th {
-    background-color: #e9ecef;
-    color: #495057;
-    font-weight: bold;
+.dropdown-item.no-match {
+  color: #373131ff;
+  text-align: center;
+  padding: 15px;
+  background: #f9f9f9;
 }
 
-.rating-table tbody tr:nth-child(even) {
-    background-color: #f8f9fa;
+/* Ввод очков */
+.score-input-container {
+  margin-bottom: 20px;
 }
 
-.rating-table tbody tr:hover {
-    background-color: #e2e6ea;
+.score-input {
+  width: 100%;
+  max-width: 200px;
+  padding: 12px;
+  font-size: 16px;
+  border: 2px solid #493f3fff;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.1);
+  color: white;
+  transition: border-color 0.3s ease;
+  outline: none;
 }
 
-.action-button {
-    padding: 8px 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-right: 5px;
-    transition: background-color 0.2s ease;
+.score-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0,123,255,0.2);
 }
 
-.action-button.edit {
-    background-color: #ffc107;
-    color: #333;
+/* Кнопки действий */
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
-.action-button.edit:hover {
-    background-color: #e0a800;
+.btn-primary {
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  min-width: 200px;
 }
 
-.action-button.delete {
-    background-color: #dc3545;
-    color: white;
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+  background: linear-gradient(135deg, #0056b3, #003d80);
 }
 
-.action-button.delete:hover {
-    background-color: #c82333;
+.btn-danger {
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #dc3545, #c82333);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  min-width: 200px;
 }
 
+.btn-danger:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+  background: linear-gradient(135deg, #c82333, #a71d2a);
+}
 
+/* Разделитель */
+.divider {
+  margin: 30px 0;
+  border: 0;
+  border-top: 2px solid rgba(255,255,255,0.2);
+}
 
+/* Для RatingList */
+.rating-title {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  color: white;
+}
 
+.rating-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 8px;
+  margin-bottom: 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
 
+.rating-item:hover {
+  background: rgba(255,255,255,0.1);
+}
 
+.rating-name {
+  font-weight: bold;
+  color: #007bff;
+}
 
-
-
-
-
-
-
-    .container {
-
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-        font-family: sans-serif;
-         box-sizing: border-box;
-                 text-align: center;
-
-    }
-
-    h1 {
-        text-align: center;
-        margin-bottom: 20px;
-    }
-
-    .error-message {
-        color: red;
-        margin-bottom: 10px;
-        padding: 10px;
-        border: 1px solid red;
-        background-color: #ffe6e6;
-    }
-
-    .form-container {
-        margin-bottom: 20px;
-    }
-
-    label {
-        display: block;
-        margin-bottom: 5px;
-        font-weight: bold;
-    }
-
-    input[type="date"] {
-        padding: 5px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        margin-bottom: 10px;
-    }
-
-    button {
-        padding: 10px 15px;
-        background-color: #4CAF50;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        margin-right: 10px;
-        
-    }
-
-    button:hover {
-        background-color: #3e8e41;
-    }
-
-    .bottom-section-button-d {
-        background: linear-gradient(135deg, rgb(20, 129, 255), rgba(62, 57, 93, 0.7));
-  color: #fff;
-    }
-
-    .polya {
-        width: 100%;
-        border-collapse: collapse;
-         box-sizing: border-box;
-    }
-
-    th,
-    td {
-        padding: 0px;
-        text-align: center;
-        border-bottom: 1px solid #ffffff;
-         box-sizing: border-box;
-    }
-
-    th {
-        background-color: #ffffff;
-        font-weight: bold;
-        color: black;
-    }
-
-      .date-container {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* Пространство между элементами */
-  }
-  #dateDisplay {
-    font-weight: bold;
-  }
-  #dateInput {
-    display: none; /* Изначально скрыто */
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  button {
-    padding: 8px 12px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  button:hover {
-    background-color: #0056b3;
-  }
+.rating-score {
+  color: #28a745;
+  font-weight: bold;
+}

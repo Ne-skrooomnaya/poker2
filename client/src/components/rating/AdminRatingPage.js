@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import RatingList from './RatingList';
+import './AdminRatingPage.css';
+
 
 const BACKEND_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
@@ -48,7 +50,6 @@ function AdminRatingPage({ user }) {
         score: score,
       });
       setMessage(response.data.message);
-
       setRefreshRatingList(prev => prev + 1);
     } catch (error) {
       console.error("Error updating rating:", error);
@@ -96,27 +97,22 @@ function AdminRatingPage({ user }) {
   };
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>Панель Администратора</h1>
-      {message && <p>{message}</p>}
+    <div className="admin-panel">
+      <h1 className="admin-title">Панель Администратора</h1>
+      {message && <p className="admin-message">{message}</p>}
 
-      <div>
-        <h2>Управление Рейтингом</h2>
+      <div className="admin-section">
+        <h2 className="section-title">Управление Рейтингом</h2>
 
         <button
           onClick={() => navigate('/admin')}
-          style={{
-            marginBottom: '20px',
-            padding: '8px 16px',
-            fontSize: '16px',
-            cursor: 'pointer'
-          }}
+          className="btn-back"
         >
           ← Назад
         </button>
 
         {/* Поле поиска */}
-        <div style={{ position: 'relative', marginBottom: '15px' }}>
+        <div className="search-container">
           <input
             type="text"
             value={searchTerm}
@@ -125,35 +121,11 @@ function AdminRatingPage({ user }) {
               setShowDropdown(true);
             }}
             placeholder="Начните вводить имя или username..."
-            style={{
-              width: '100%',
-              padding: '10px',
-              fontSize: '16px',
-              border: '1px solid #493f3fff',
-              borderRadius: '4px'
-            }}
-            onFocus={() => filteredUsers.length > 0 && setShowDropdown(true)}
-            onBlur={() => setTimeout(() => setShowDropdown(false), 150)}
+            className="search-input"
           />
 
           {showDropdown && (
-            <ul
-              style={{
-                position: 'absolute',
-                zIndex: 1000,
-                left: 0,
-                right: 0,
-                top: '100%',
-                background: 'white',
-                border: '1px solid #704141ff',
-                borderRadius: '4px',
-                maxHeight: '200px',
-                overflowY: 'auto',
-                listStyle: 'none',
-                padding: 0,
-                margin: 0,
-              }}
-            >
+            <ul className="dropdown-list">
               {filteredUsers.length > 0 ? (
                 filteredUsers.map(user => (
                   <li
@@ -163,14 +135,7 @@ function AdminRatingPage({ user }) {
                       setSearchTerm(`${user.firstName || ''} ${user.lastName || ''}`.trim() || user.username || '');
                       setShowDropdown(false);
                     }}
-                    style={{
-                      padding: '10px',
-                      cursor: 'pointer',
-                      backgroundColor: '#7c4949ff',
-                      borderBottom: '1px solid #f0f0f0'
-                    }}
-                    onMouseEnter={(e) => e.target.style.backgroundColor = '#f9f9f9'}
-                    onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+                    className="dropdown-item"
                   >
                     <strong>{user.firstName || user.username || 'Без имени'}</strong>
                     {user.lastName && ` ${user.lastName}`}
@@ -178,7 +143,7 @@ function AdminRatingPage({ user }) {
                   </li>
                 ))
               ) : (
-                <li style={{ padding: '10px', color: '#373131ff' }}>
+                <li className="dropdown-item no-match">
                   Нет совпадений
                 </li>
               )}
@@ -186,28 +151,31 @@ function AdminRatingPage({ user }) {
           )}
         </div>
 
-        <input
-          type="number"
-          value={score}
-          onChange={(e) => setScore(Number(e.target.value))}
-          placeholder="Балл рейтинга"
-          style={{ marginRight: '10px', padding: '8px' }}
-        />
+        <div className="score-input-container">
+          <input
+            type="number"
+            value={score}
+            onChange={(e) => setScore(Number(e.target.value))}
+            placeholder="Балл рейтинга"
+            className="score-input"
+          />
+        </div>
 
-        <button onClick={handleUpdateRating} style={{ padding: '8px 15px' }}>
-          Добавить в рейтинг или редактировать
-        </button>
-
-        <button onClick={handleDelete} style={{ marginLeft: '10px', padding: '8px 15px' }}>
-          Удалить из рейтинга
-        </button>
+        <div className="action-buttons">
+          <button onClick={handleUpdateRating} className="btn-primary">
+            Добавить в рейтинг или редактировать
+          </button>
+          <button onClick={handleDelete} className="btn-danger">
+            Удалить из рейтинга
+          </button>
+        </div>
       </div>
 
-      <hr style={{ margin: '30px 0', borderColor: '#eee' }} />
+      <hr className="divider" />
 
       <RatingList
         title="Текущий Рейтинг Пользователей"
-        refreshKey={refreshRatingList} // ← передаём число
+        refreshKey={refreshRatingList}
       />
     </div>
   );
