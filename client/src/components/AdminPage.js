@@ -14,9 +14,11 @@ const AdminPage = ({ onLogout }) => {
           </div>
    {/* Верхний блок */}
 
-           <h1>Панель администратора</h1>
+           
            <div className="bottom-section">
-             <Link to="/rating">📊 Посмотреть рейтинг</Link>
+             <Link to="/rating" className="t">
+               <button className="bottom-section-button">Рейтинг</button>
+             </Link>
              <Link to="/rating" className="t">
              <button className="bottom-section-button">Гонка месяца</button></Link>
              <Link to="/rating" className="t">

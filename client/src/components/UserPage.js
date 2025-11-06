@@ -16,9 +16,13 @@ const UserPage = ({ onLogout }) => {
 
            
            <div className="bottom-section">
-             <Link to="/rating">📊 Посмотреть рейтинг</Link>
-             <button className="bottom-section-button">Гонка месяца</button>
-             <button className="bottom-section-button">Прошедшие игры</button>
+             <Link to="/rating" className="t">
+               <button className="bottom-section-button">Рейтинг</button>
+             </Link>
+             <Link to="/rating" className="t">
+             <button className="bottom-section-button">Гонка месяца</button></Link>
+             <Link to="/rating" className="t">
+             <button className="bottom-section-button">Прошедшие игры</button></Link>
              
              
            </div>
