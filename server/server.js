@@ -35,6 +35,13 @@ const ratingRoutes = require('./routes/rating.routes');
 const adminRoutes = require('./routes/admin.routes');
 
 app.use('/auth', authRoutes); // Например, /auth/login
+const authRoutes = require('./routes/auth.routes');
+console.log('Auth routes:', authRoutes); // ← должно быть [Function: router]
+
+if (!authRoutes) {
+  console.error(' authRoutes is undefined!');
+  process.exit(1);
+  }
 app.use('/users', userRoutes); // Например, /users
 app.use('/rating', ratingRoutes); // Например, /rating
 app.use('/admin', adminRoutes); // Например, /admin/update-rating
