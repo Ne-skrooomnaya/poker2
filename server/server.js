@@ -4,10 +4,10 @@ const express = require('express');
 const path = require('path');
 const app = express();
 
-// Подключение middleware
+// Middleware
 app.use(express.json());
 
-// Роуты API — СНАЧАЛА!
+// API Routes
 const authRoutes = require('./routes/auth.routes');
 const adminRoutes = require('./routes/admin.routes');
 const ratingRoutes = require('./routes/rating.routes');
@@ -18,11 +18,11 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/rating', ratingRoutes);
 app.use('/api/user', userRoutes);
 
-// Обслуживание фронтенда — ТОЛЬКО ПОСЛЕ ВСЕХ API РОУТОВ
+// Обслуживание React App (SPA)
 app.use(express.static(path.join(__dirname, '../../client/build')));
 
 // Для SPA: если ни один из API-роутов не подошёл — отдать index.html
-app.get(/.*/, (req, res) => {
+app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../../client/build', 'index.html'));
 });
 
