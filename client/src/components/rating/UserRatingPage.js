@@ -76,13 +76,12 @@ function UserRatingPage() {
   const combinedList = useMemo(() => {
     return [
       ...staticPlayers.map((p, i) => ({
-        id: `static-${i}`,
+        userId: `static-${i}`,
         name: p.name,
         score: p.score,
         isStatic: true
       })),
       ...ratings.map(r => ({
-        id: r._id,
         userId: r.userId,
         score: r.score,
         isStatic: false
@@ -128,7 +127,7 @@ function UserRatingPage() {
 
       <RatingList
         title="Рейтинг участников"
-        combinedList={filteredList}
+        ratings={filteredList}
         users={users}
       />
     </div>
