@@ -1,66 +1,45 @@
 // server/server.js
-
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const path = require('path');
-require('dotenv').config(); // Для загрузки переменных окружения
+require('dotenv').config();
 
 const app = express();
 
 // --- Переменные окружения ---
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000; // Railway сам подставит PORT
 const mongoURI = process.env.MONGODB_URI;
 
 // --- Подключение к MongoDB ---
-mongoose.connect(mongoURI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log('MongoDB connected successfully'))
-.catch(err => console.error('MongoDB connection error:', err));
+mongoose.connect(mongoURI)
+  .then(() => console.log('MongoDB connected successfully'))
+  .catch(err => {
+    console.error('MongoDB connection error:', err);
+    process.exit(1); // критическая ошибка — завершаем процесс
+  });
 
 // --- Middleware ---
-app.use(express.json()); // Для парсинга JSON-запросов
+app.use(express.json());
 app.use(cors({
-  origin: process.env.CLIENT_URL || '*', // Укажите ваш домен на Render для продакшена
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  origin: process.env.CLIENT_URL || 'https://poker2-olive.vercel.app', // ← URL с Vercel
   credentials: true
 }));
 
-// --- API Routes (Важно: Эти маршруты должны быть ПЕРЕД обслуживанием статики) ---
+// --- API Routes ---
 const authRoutes = require('./routes/auth.routes');
 const userRoutes = require('./routes/user.routes');
 const ratingRoutes = require('./routes/rating.routes');
 const adminRoutes = require('./routes/admin.routes');
 
-app.use('/auth', authRoutes); // Например, /auth/login
-app.use('/users', userRoutes); // Например, /users
-app.use('/rating', ratingRoutes); // Например, /rating
-app.use('/admin', adminRoutes); // Например, /admin/update-rating
+app.use('/auth', authRoutes);
+app.use('/users', userRoutes);
+app.use('/rating', ratingRoutes);
+app.use('/admin', adminRoutes);
 
-// --- Обслуживание статических файлов фронтенда ---
-// Путь к папке 'build' вашего React-приложения
-// Предполагается, что 'server' и 'client' находятся в одной корневой папке 'poker'
-const frontendBuildPath = path.join(__dirname, '../client/build');
-
-// 1. Сначала отдаем статические файлы (CSS, JS, изображения и т.д.)
-app.use(express.static(frontendBuildPath));
-
-// 2. Затем, для всех остальных GET-запросов (которые не являются статическими файлами
-// и не являются API-маршрутами), отдаем index.html.
-// Это позволяет клиентскому роутеру (например, React Router) обрабатывать маршруты.
-// server/server.js
-// ... (ваш существующий код)
-
-// Важно: Этот маршрут должен быть ПОСЛЕ всех ваших API маршрутов и express.static
-app.get(/.*/, (req, res) => { // Использование регулярного выражения для "любого маршрута"
-  res.sendFile(path.join(frontendBuildPath, 'index.html'));
+// --- Health check ---
+app.get('/health', (req, res) => {
+  res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
-
-// ... (остальной код)
-
-
 
 // --- Запуск сервера ---
 app.listen(PORT, () => {
