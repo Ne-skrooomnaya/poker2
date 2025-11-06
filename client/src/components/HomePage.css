@@ -25,7 +25,7 @@ body {
     /* Убираем размытие и полупрозрачный фон */
     background-color: #0a0723c8; /* Цвет фона body */
     backdrop-filter: blur(3px); /* Размытие фона */
-
+    width: 182px;
     border-radius: 12px;
     padding: 22px;
     display: flex;
@@ -127,17 +127,7 @@ font-size: 16px;
     max-width: 200px;
     min-width: 95px;
 }
-/* Верхние кнопки */
-.top-buttonsad {
-    display: flex;
-        align-items: center;
-    justify-content: center;
-    text-align: center;
-    gap: 16px;
-    padding-right: 30px;
-    max-width: 200px;
-    min-width: 95px;
-}
+
 
 .top-buttons button {
 background: linear-gradient(135deg, rgb(20, 129, 255), rgba(30, 23, 72, 0.7));

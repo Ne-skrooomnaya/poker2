@@ -1,7 +1,8 @@
 // client/src/components/PastGamesPage.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './PastGamesPage.css'
+import './PastGamesPage.css';
+
 function PastGamesPage() {
   const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState('05.11.2025');
