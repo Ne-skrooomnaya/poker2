@@ -15,9 +15,6 @@ const AdminPage = ({ onLogout }) => {
           </div>
           {/* Верхний блок */}
         <div class="top-section">
-            <div class="top-section-img">
-                <object data="/images/chip.svg"type="image/svg+xml"><img src="/images/chip.svg" alt="chip" /></object>
-            </div>
             <div class="top-buttons">
              <button onClick={() => navigate('/rating')} className="bottom-section-button">Рейтинг</button>
              <button onClick={() => navigate('/')} className="bottom-section-button">Гонка месяца</button>

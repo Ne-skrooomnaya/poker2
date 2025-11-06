@@ -34,7 +34,21 @@
   margin-bottom: 20px;
   font-size: 1.5rem;
 }
-
+.bottom-section-buttonad {
+     /* Растягиваем кнопку на всю ширину контейнера */
+  width: 100%; 
+  /* Автоматически задаем отступы слева и справа */
+  margin-left: auto;
+  margin-right: auto;
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
 /* Кнопка "Назад" */
 .btn-back {
   display: block;

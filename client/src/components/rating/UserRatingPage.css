@@ -1,6 +1,6 @@
 /* Страница рейтинга пользователя */
 .user-rating-page {
-  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+  /* background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); */
   color: white;
   padding: 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
