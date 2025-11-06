@@ -78,15 +78,15 @@ function RatingList({ title, refreshKey = 0, ratings: externalRatings, users: ex
                     style={{
                       marginBottom: '10px',
                       padding: '8px',
-                      borderBottom: '1px solid #eee',
+                      borderBottom: '1px solid #463d97ff',
                       display: 'flex',
                       justifyContent: 'space-between',
                       alignItems: 'center',
-                      backgroundColor: index % 2 === 0 ? '#f9f9f9' : '#ffffff',
+                      backgroundColor: index % 2 === 0 ? '#988080ff' : '#452121ff',
                       borderRadius: '4px',
                     }}
                   >
-                    <span style={{ fontWeight: 'bold' }}>
+                    <span style={{ fontWeight: 'bold', color: '#000000ff' }}>
                       {index + 1}. {displayName}
                     </span>
                     <span style={{ color: '#007bff' }}>Score: {item.score || 0}</span>

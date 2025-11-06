@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import RatingList from './RatingList';
-//const BACKEND_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000'; // Эта константа здесь больше не нужна, но оставлена на случай, если у вас есть другие запросы
+const BACKEND_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000'; // Эта константа здесь больше не нужна, но оставлена на случай, если у вас есть другие запросы
 
 function UserRatingPage({ user }) {
   const navigate = useNavigate();
@@ -12,14 +12,14 @@ function UserRatingPage({ user }) {
 
   // Получаем все рейтинги
   useEffect(() => {
-    fetch('/api/rating')
+    fetch(`${BACKEND_URL}/rating`)
       .then(res => res.json())
       .then(data => setRatings(data));
   }, []);
 
   // Получаем всех пользователей (один раз)
   useEffect(() => {
-    fetch('/api/users')
+    fetch(`${BACKEND_URL}/users`)
       .then(res => res.json())
       .then(data => {
         const userMap = {};
