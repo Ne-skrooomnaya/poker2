@@ -1,27 +1,27 @@
-// client/src/pages/AdminRatingPage.js
+// client/src/components/rating/AdminRatingPage.js
+
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // ← Добавь это
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import RatingList from './RatingList'; // Или где у тебя находится компонент
+import RatingList from './RatingList';
 
 const BACKEND_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 function AdminRatingPage({ user }) {
-    const navigate = useNavigate(); 
-  const [users, setUsers] = useState([]); // Список всех пользователей
-  const [selectedUserId, setSelectedUserId] = useState('');
+  const navigate = useNavigate();
+  const [users, setUsers] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [showDropdown, setShowDropdown] = useState(false);
   const [score, setScore] = useState(0);
   const [message, setMessage] = useState('');
   const [refreshRatingList, setRefreshRatingList] = useState(0);
-const [searchTerm, setSearchTerm] = useState('');
-const [selectedUser, setSelectedUser] = useState(null);
-const [showDropdown, setShowDropdown] = useState(false);
 
-const filteredUsers = users.filter(user =>
-  (user.username?.toLowerCase().includes(searchTerm.toLowerCase())) ||
-  (user.firstName?.toLowerCase().includes(searchTerm.toLowerCase())) ||
-  (user.lastName?.toLowerCase().includes(searchTerm.toLowerCase()))
-);
+  const filteredUsers = users.filter(user =>
+    (user.username?.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (user.firstName?.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (user.lastName?.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -37,22 +37,22 @@ const filteredUsers = users.filter(user =>
   }, []);
 
   const handleUpdateRating = async () => {
-    if (!selectedUserId || score === undefined || score === null) {
+    if (!selectedUser || score === undefined || score === null) {
       setMessage("Пожалуйста, выберите пользователя и введите балл.");
       return;
     }
 
     try {
       const response = await axios.post(`${BACKEND_URL}/admin/update-rating`, {
-        userId: selectedUserId,
+        userId: selectedUser._id,
         score: score,
       });
-
       setMessage(response.data.message);
+      setRefreshRatingList(prev => prev + 1);
     } catch (error) {
       console.error("Error updating rating:", error);
       let errorMessage = "Ошибка при обновлении рейтинга.";
-      if (error.response && error.response.data && error.response.data.message) {
+      if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
       } else if (error.request) {
         errorMessage = "Сервер недоступен.";
@@ -61,38 +61,38 @@ const filteredUsers = users.filter(user =>
     }
   };
 
-  // Функция удаления по telegramId
   const handleDelete = async () => {
-  if (!selectedUserId) {
-    alert('Пожалуйста, выберите пользователя');
-    return;
-  }
-
-  if (!window.confirm(`Вы уверены, что хотите удалить этого пользователя из рейтинга?`)) {
-    return;
-  }
-
-  try {
-    const response = await fetch(`${BACKEND_URL}/rating/user/${selectedUser._id}`, {
-  method: 'DELETE',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-    if (response.ok) {
-      setUsers(prev => prev.filter(user => user._id !== selectedUserId));
-      setSelectedUserId('');
-      setScore(0);
-      setRefreshRatingList(prev => prev + 1);
-      alert('Пользователь успешно удален из рейтинга');
-    } else {
-      alert('Ошибка при удалении пользователя из рейтинга');
+    if (!selectedUser) {
+      alert('Пожалуйста, выберите пользователя');
+      return;
     }
-  } catch (error) {
-    console.error('Ошибка при удалении:', error);
-    alert('Ошибка сети');
-  }
-};
+
+    if (!window.confirm(`Вы уверены, что хотите удалить ${selectedUser.username || selectedUser.firstName} из рейтинга?`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`${BACKEND_URL}/rating/user/${selectedUser._id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        setMessage('✅ Пользователь успешно удален из рейтинга');
+        setRefreshRatingList(prev => prev + 1);
+        setSelectedUser(null);
+        setSearchTerm('');
+        setScore(0);
+      } else {
+        alert('❌ Ошибка при удалении пользователя из рейтинга');
+      }
+    } catch (error) {
+      console.error('Ошибка при удалении:', error);
+      alert('❌ Ошибка сети');
+    }
+  };
 
   return (
     <div style={{ padding: '20px' }}>
@@ -101,89 +101,89 @@ const filteredUsers = users.filter(user =>
 
       <div>
         <h2>Управление Рейтингом</h2>
-        {/* Кнопка "Назад" */}
-      <button
-        onClick={() => navigate('/admin')}
-        style={{
-          marginBottom: '20px',
-          padding: '8px 16px',
-          fontSize: '16px',
-          cursor: 'pointer'
-        }}
-      >
-        ← Назад
-      </button>
+
+        <button
+          onClick={() => navigate('/admin')}
+          style={{
+            marginBottom: '20px',
+            padding: '8px 16px',
+            fontSize: '16px',
+            cursor: 'pointer'
+          }}
+        >
+          ← Назад
+        </button>
+
+        {/* Поле поиска */}
         <div style={{ position: 'relative', marginBottom: '15px' }}>
-  <input
-    type="text"
-    value={searchTerm}
-    onChange={(e) => {
-      setSearchTerm(e.target.value);
-      setShowDropdown(true);
-    }}
-    placeholder="Начните вводить имя или username..."
-    style={{
-      width: '100%',
-      padding: '10px',
-      fontSize: '16px',
-      border: '1px solid #493f3fff',
-      borderRadius: '4px'
-    }}
-    onFocus={() => filteredUsers.length > 0 && setShowDropdown(true)}
-    onBlur={() => setTimeout(() => setShowDropdown(false), 150)} // задержка для клика
-  />
-
-  {showDropdown && (
-    <ul className='spisok'
-      style={{
-        position: 'absolute',
-        zIndex: 1000,
-        left: 0,
-        right: 0,
-        top: '100%',
-        background: 'white',
-        border: '1px solid #704141ff',
-
-        borderRadius: '4px',
-        maxHeight: '200px',
-        overflowY: 'auto',
-        listStyle: 'none',
-        padding: 0,
-        margin: 0,
-      }}
-    >
-      {filteredUsers.length > 0 ? (
-        filteredUsers.map(user => (
-          <li
-            key={user._id}
-            onClick={() => {
-              setSelectedUser(user);
-              setSearchTerm(`${user.firstName || ''} ${user.lastName || ''}`.trim() || user.username || '');
-              setShowDropdown(false);
-            }}className='spisok'
-            style={{
-              padding: '10px',
-              cursor: 'pointer',
-              backgroundColor: '#7c4949ff',
-              
-              borderBottom: '1px solid #f0f0f0'
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setShowDropdown(true);
             }}
-            onMouseEnter={(e) => e.target.style.backgroundColor = '#f9f9f9'}
-            onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
-          >
-            <strong className='spisok'>{user.firstName || user.username || 'Без имени'}</strong>
-            {user.lastName && ` ${user.lastName}`}
-            {user.username && ` (@${user.username})`}
-          </li>
-        ))
-      ) : (
-        <li style={{ padding: '10px', color: '#373131ff' }}>
-          Нет совпадений
-        </li>
-      )}
-    </ul>
-  )}
-</div>
+            placeholder="Начните вводить имя или username..."
+            style={{
+              width: '100%',
+              padding: '10px',
+              fontSize: '16px',
+              border: '1px solid #493f3fff',
+              borderRadius: '4px'
+            }}
+            onFocus={() => filteredUsers.length > 0 && setShowDropdown(true)}
+            onBlur={() => setTimeout(() => setShowDropdown(false), 150)}
+          />
+
+          {showDropdown && (
+            <ul
+              style={{
+                position: 'absolute',
+                zIndex: 1000,
+                left: 0,
+                right: 0,
+                top: '100%',
+                background: 'white',
+                border: '1px solid #704141ff',
+                borderRadius: '4px',
+                maxHeight: '200px',
+                overflowY: 'auto',
+                listStyle: 'none',
+                padding: 0,
+                margin: 0,
+              }}
+            >
+              {filteredUsers.length > 0 ? (
+                filteredUsers.map(user => (
+                  <li
+                    key={user._id}
+                    onClick={() => {
+                      setSelectedUser(user);
+                      setSearchTerm(`${user.firstName || ''} ${user.lastName || ''}`.trim() || user.username || '');
+                      setShowDropdown(false);
+                    }}
+                    style={{
+                      padding: '10px',
+                      cursor: 'pointer',
+                      backgroundColor: '#7c4949ff',
+                      borderBottom: '1px solid #f0f0f0'
+                    }}
+                    onMouseEnter={(e) => e.target.style.backgroundColor = '#f9f9f9'}
+                    onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+                  >
+                    <strong>{user.firstName || user.username || 'Без имени'}</strong>
+                    {user.lastName && ` ${user.lastName}`}
+                    {user.username && ` (@${user.username})`}
+                  </li>
+                ))
+              ) : (
+                <li style={{ padding: '10px', color: '#373131ff' }}>
+                  Нет совпадений
+                </li>
+              )}
+            </ul>
+          )}
+        </div>
 
         <input
           type="number"
