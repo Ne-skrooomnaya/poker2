@@ -21,6 +21,7 @@ const UserPage = ({ onLogout }) => {
             </div>
             <div class="top-buttons">
              <button onClick={() => navigate('/rating')} className="bottom-section-button">Рейтинг</button>
+             <button onClick={() => navigate('/monthly-race')} className="bottom-section-button">Гонка месяца</button>
              <button onClick={() => navigate('/')} className="bottom-section-button">Гонка месяца</button>
              <button onClick={() => navigate('/')} className="bottom-section-button">Прошедшие игры</button>
             </div>

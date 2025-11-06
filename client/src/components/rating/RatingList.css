@@ -55,15 +55,15 @@
 
 .rating-name {
   font-weight: bold;
-  color: #4fc3f7;
+  color: #4ff7e1;
   font-size: 1.1rem;
 }
 
 .rating-score {
-  color: #66bb6a;
+  color: #aae0ff;
   font-weight: bold;
   font-size: 1.1rem;
-  background: rgba(102, 187, 106, 0.15);
+  background: rgba(102, 177, 187, 0.15);
   padding: 4px 12px;
   border-radius: 20px;
 }

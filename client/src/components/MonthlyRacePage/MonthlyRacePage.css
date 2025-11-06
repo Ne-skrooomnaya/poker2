@@ -1,0 +1,86 @@
+.monthly-race-page {
+  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+  color: white;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+}
+
+.monthly-race-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  text-shadow: 0 0 10px rgba(255,255,255,0.5);
+}
+
+.monthly-race-search {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.monthly-race-search input {
+  flex: 1;
+  padding: 12px;
+  font-size: 16px;
+  border: 2px solid #493f3f;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.1);
+  color: white;
+  transition: border-color 0.3s ease;
+  outline: none;
+}
+
+.monthly-race-search button {
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.monthly-race-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: white;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.monthly-race-table th,
+.monthly-race-table td {
+  padding: 12px;
+  text-align: left;
+}
+
+.monthly-race-table th {
+  background: #333;
+  font-weight: bold;
+}
+
+.monthly-race-table tr:nth-child(even) {
+  background: rgba(255,255,255,0.05);
+}
+
+.monthly-race-table .title-badge {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 20px;
+  font-weight: bold;
+  color: white;
+}
+
+.monthly-race-table .title-gm {
+  background: #FF5722;
+}
+
+.monthly-race-table .title-se {
+  background: #E91E63;
+}
