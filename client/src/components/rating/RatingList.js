@@ -52,6 +52,8 @@ function RatingList({ title, refreshKey = 0, ratings: externalRatings, users: ex
     { name: 'Илья Темячов', score: 12700 },
   ];
 
+
+  
   useEffect(() => {
     if (externalRatings === undefined) {
       const fetchRatingData = async () => {
@@ -94,6 +96,7 @@ function RatingList({ title, refreshKey = 0, ratings: externalRatings, users: ex
                 <span className="rating-score">Score: {player.score.toLocaleString()}</span>
               </li>
             ))}
+
 
             {/* Реальные пользователи из БД */}
             {dataToShow.map((item, index) => {
