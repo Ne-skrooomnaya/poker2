@@ -22,7 +22,7 @@ app.use('/api/user', userRoutes);
 app.use(express.static(path.join(__dirname, '../../client/build')));
 
 // Для SPA: если ни один из API-роутов не подошёл — отдать index.html
-app.get('*', (req, res) => {
+app.get(/.*/, (req, res) => {
   res.sendFile(path.join(__dirname, '../../client/build', 'index.html'));
 });
 
