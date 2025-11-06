@@ -21,14 +21,13 @@
   max-width: 200px;
   margin: 0 auto 20px;
   padding: 12px 20px;
-  background: linear-gradient(135deg, #007bff, #0056b3);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  background: linear-gradient(135deg, rgb(20, 129, 255), rgba(30, 23, 72, 0.81));
+    color: #fff;
+    font-size: 18px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), inset 0 1px 3px rgba(30, 23, 72, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    transition: background-color 0.3s
 }
 
 .btn-back:hover {

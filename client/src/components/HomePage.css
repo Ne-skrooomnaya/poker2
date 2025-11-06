@@ -177,9 +177,8 @@ background: linear-gradient(135deg, rgba(64, 0, 255, 0.186), rgba(30, 23, 72, 0.
 }
 
 .bottom-section-button {
-  max-width: 400px;
     max-height: 90px;
-    min-width: 110px;
+   width: 100%;
     min-height: 60px;
     border-radius: 5px;
     border-radius: 18px;
