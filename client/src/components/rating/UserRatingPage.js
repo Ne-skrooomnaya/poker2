@@ -32,20 +32,21 @@ function UserRatingPage({ user }) {
 
   // Фильтруем рейтинги по имени пользователя
   const filteredRatings = ratings.filter(rating => {
-    const user = users[rating.userId]; // находим пользователя по userId
-    if (!user) {
-  console.log('Не найден пользователь для rating.userId:', rating.userId);
-  return true; // или false — зависит от того, хочешь ли ты показывать таких пользователей
-}
+  const user = users[rating.userId];
+  if (!user) {
+    console.warn(`Пользователь с userId=${rating.userId} не найден в users`);
+    // Не удаляем, просто помечаем как "Неизвестный"
+    return true;
+  }
 
-    const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim().toLowerCase();
-    const username = user.username?.toLowerCase() || '';
+  const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim().toLowerCase();
+  const username = user.username?.toLowerCase() || '';
 
-    return (
-      fullName.includes(searchTerm.toLowerCase()) ||
-      username.includes(searchTerm.toLowerCase())
-    );
-  });
+  return (
+    fullName.includes(searchTerm.toLowerCase()) ||
+    username.includes(searchTerm.toLowerCase())
+  );
+});
     return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
       <h1 style={{ color: '#333', marginBottom: '20px' }}>Рейтинг Пользователей</h1>
