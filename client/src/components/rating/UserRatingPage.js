@@ -48,7 +48,7 @@ function UserRatingPage({ user }) {
       <h1 style={{ color: '#333', marginBottom: '20px' }}>Рейтинг Пользователей</h1>
        {/* Кнопка "Назад" */}
       <button
-        onClick={() => navigate('/admin')}
+        onClick={() => navigate('/user')}
         style={{
           marginBottom: '20px',
           padding: '8px 16px',

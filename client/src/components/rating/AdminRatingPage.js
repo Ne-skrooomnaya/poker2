@@ -126,7 +126,7 @@ const filteredUsers = users.filter(user =>
       width: '100%',
       padding: '10px',
       fontSize: '16px',
-      border: '1px solid #ccc',
+      border: '1px solid #493f3fff',
       borderRadius: '4px'
     }}
     onFocus={() => filteredUsers.length > 0 && setShowDropdown(true)}

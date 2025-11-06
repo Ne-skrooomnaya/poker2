@@ -20,7 +20,7 @@ function RatingList({ title, refreshKey = 0, ratings: externalRatings, users: ex
   const [error, setError] = useState(null);
 
   // Если внешние данные НЕ переданы — запрашиваем сами (старое поведение)
-  useEffect(() => {
+useEffect(() => {
     if (externalRatings === undefined) {
       const fetchRatingData = async () => {
         try {
@@ -38,16 +38,14 @@ function RatingList({ title, refreshKey = 0, ratings: externalRatings, users: ex
 
       fetchRatingData();
     } else {
-      // Если данные переданы — не загружаем, просто "загружено"
+      // Если данные переданы — просто "загружено"
       setLoading(false);
-      // Нет смысла обновлять local state, если данные управляемые
     }
   }, [refreshKey, externalRatings]); // ← Зависимость от externalRatings
-
   // Решаем, что отображать: внешние данные или внутренние
-  const dataToShow = externalRatings !== undefined ? externalRatings : ratingData;
+ const dataToShow = externalRatings !== undefined ? externalRatings : ratingData;
 
-  return (
+   return (
     <div style={{ padding: '0px', fontFamily: 'Arial, sans-serif' }}>
       {title && <h2 style={{ color: '#333', marginBottom: '15px' }}>{title}</h2>}
 
@@ -78,15 +76,15 @@ function RatingList({ title, refreshKey = 0, ratings: externalRatings, users: ex
                     style={{
                       marginBottom: '10px',
                       padding: '8px',
-                      borderBottom: '1px solid #463d97ff',
+                      borderBottom: '1px solid #eee',
                       display: 'flex',
                       justifyContent: 'space-between',
                       alignItems: 'center',
-                      backgroundColor: index % 2 === 0 ? '#988080ff' : '#452121ff',
+                      backgroundColor: index % 2 === 0 ? '#f9f9f9' : '#ffffff',
                       borderRadius: '4px',
                     }}
                   >
-                    <span style={{ fontWeight: 'bold', color: '#000000ff' }}>
+                    <span style={{ fontWeight: 'bold' }}>
                       {index + 1}. {displayName}
                     </span>
                     <span style={{ color: '#007bff' }}>Score: {item.score || 0}</span>
