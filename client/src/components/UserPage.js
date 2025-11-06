@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import './UserPage.css';
 import { Link } from 'react-router-dom';
 import './HomePage.css';
-import logo from './images/logo.svg'; // Импортируйте ваш логотип
+import волк from './images/волк.PNG'; // Импортируйте ваш логотип
 
 const UserPage = ({ onLogout }) => {
     const navigate = useNavigate();
@@ -12,7 +12,7 @@ const UserPage = ({ onLogout }) => {
     <>
         {/* Логотип */}
         <div className="logo-container">
-            <img src={logo} alt="Poker Logo" />
+            <img src={волк} alt="Poker Logo" />
         </div>
         {/* Верхний блок */}
         <div class="top-section">
