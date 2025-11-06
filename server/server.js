@@ -30,7 +30,7 @@ app.use(cors({
 
 // --- API Routes (Важно: Эти маршруты должны быть ПЕРЕД обслуживанием статики) ---
 const authRoutes = require('./routes/auth.routes');
-// const userRoutes = require('./routes/user.routes');
+const userRoutes = require('./routes/user.routes');
 // const ratingRoutes = require('./routes/rating.routes');
 // const adminRoutes = require('./routes/admin.routes');
 
@@ -42,7 +42,7 @@ app.use('/auth', authRoutes); // Например, /auth/login
 //   console.error(' authRoutes is undefined!');
 //   process.exit(1);
 //   }
-// app.use('/users', userRoutes); // Например, /users
+app.use('/users', userRoutes); // Например, /users
 // app.use('/rating', ratingRoutes); // Например, /rating
 // app.use('/admin', adminRoutes); // Например, /admin/update-rating
 
