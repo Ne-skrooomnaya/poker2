@@ -21,7 +21,7 @@ mongoose.connect(mongoURI)
 // --- Middleware ---
 app.use(express.json());
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'https://poker2-olive.vercel.app', // ← URL с Vercel
+  origin: process.env.CLIENT_URL || 'https://poker2-phi.vercel.app', // ← URL с Vercel
   credentials: true
 }));
 
