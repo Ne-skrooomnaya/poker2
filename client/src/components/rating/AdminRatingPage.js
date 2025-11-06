@@ -142,7 +142,8 @@ const filteredUsers = users.filter(user =>
         right: 0,
         top: '100%',
         background: 'white',
-        border: '1px solid #ccc',
+        border: '1px solid #704141ff',
+
         borderRadius: '4px',
         maxHeight: '200px',
         overflowY: 'auto',
@@ -163,6 +164,7 @@ const filteredUsers = users.filter(user =>
             style={{
               padding: '10px',
               cursor: 'pointer',
+              backgroundColor: '#7c4949ff',
               borderBottom: '1px solid #f0f0f0'
             }}
             onMouseEnter={(e) => e.target.style.backgroundColor = '#f9f9f9'}
@@ -174,7 +176,7 @@ const filteredUsers = users.filter(user =>
           </li>
         ))
       ) : (
-        <li style={{ padding: '10px', color: '#999' }}>
+        <li style={{ padding: '10px', color: '#373131ff' }}>
           Нет совпадений
         </li>
       )}
