@@ -1,11 +1,13 @@
 // client/src/pages/AdminRatingPage.js
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // ← Добавь это
 import axios from 'axios';
 import RatingList from './RatingList'; // Или где у тебя находится компонент
 
 const BACKEND_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 function AdminRatingPage({ user }) {
+    const navigate = useNavigate(); 
   const [users, setUsers] = useState([]); // Список всех пользователей
   const [selectedUserId, setSelectedUserId] = useState('');
   const [score, setScore] = useState(0);
@@ -90,6 +92,18 @@ function AdminRatingPage({ user }) {
 
       <div>
         <h2>Управление Рейтингом</h2>
+        {/* Кнопка "Назад" */}
+      <button
+        onClick={() => navigate('/admin')}
+        style={{
+          marginBottom: '20px',
+          padding: '8px 16px',
+          fontSize: '16px',
+          cursor: 'pointer'
+        }}
+      >
+        ← Назад
+      </button>
         <select
           value={selectedUserId}
           onChange={(e) => setSelectedUserId(e.target.value)}
