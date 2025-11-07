@@ -4,7 +4,7 @@ import React from 'react';
 import AdminRatingPage from './rating/AdminRatingPage'; // Компонент админского рейтинга
 import UserRatingPage from './rating/UserRatingPage';   // Компонент обычного рейтинга
 import useTelegram from '../hooks/useTelegram';         // Путь к твоему хуку
-import './RatingList.css';
+
 const RatingPage = ({ user }) => { // Принимаем user как пропс
     // Важно: Убедитесь, что user объект, возвращаемый useTelegram(),
     // действительно содержит поле `role` и оно правильно установлено.
