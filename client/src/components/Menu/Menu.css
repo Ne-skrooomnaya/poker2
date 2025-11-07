@@ -5,8 +5,7 @@
   flex-direction: column;
   align-items: center;
   padding: 20px 16px;
-  min-height: 100vh;
-  box-sizing: border-box;
+  /* Убираем min-height и vertical-centering */
   background: linear-gradient(135deg, #0c0925, #1a153d);
   color: white;
 }
@@ -49,7 +48,6 @@
   transform: scale(1.02);
 }
 
-/* Для маленьких экранов */
 @media (max-width: 360px) {
   .menu-icon {
     max-width: 280px;

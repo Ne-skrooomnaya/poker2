@@ -27,7 +27,7 @@ function UserRatingPage() {
   }, [ratings, searchTerm]);
 
   return (
-    <div className="user-rating-page mobile-friendly">
+    <div className="user-rating-page"> {/* Убираем mobile-friendly */}
       <h1 className="page-title">Рейтинг Участников</h1>
       <button onClick={() => navigate('/user')} className="btn-back">
         ← Назад
