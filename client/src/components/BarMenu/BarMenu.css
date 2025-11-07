@@ -36,10 +36,10 @@
 }
 
 .menu-card {
-  background: rgba(10, 8, 30, 0.6);
+  background: rgba(10, 8, 30, 0.774);
   border-radius: 12px;
   padding: 30px 20px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.262);
   text-align: center;
   font-size: 1.1rem;
   line-height: 1.8;
