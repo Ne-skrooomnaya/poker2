@@ -2,21 +2,56 @@
 
 .menu-container {
   display: flex;
-  justify-content: center;
-  margin: 20px 0;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 16px;
+  min-height: 100vh;
+  box-sizing: border-box;
+  background: linear-gradient(135deg, #0c0925, #1a153d);
+  color: white;
 }
 
-.menu-link {
-  display: inline-block;
-}
-
-.menu-icon {
-  width: 310px;    /* или любая нужная ширина */
-  height: auto;
-  border-radius: 8px;
+.menu-back-btn {
+  align-self: flex-start;
+  margin-bottom: 24px;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, #1481ff, #1e1748);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
   transition: transform 0.2s;
 }
 
-.menu-icon:hover {
-  transform: scale(1.05);
+.menu-back-btn:active {
+  transform: scale(0.98);
+}
+
+.menu-link {
+  display: block;
+  margin: 0 auto;
+}
+
+.menu-icon {
+  width: 100%;
+  max-width: 310px;
+  height: auto;
+  border-radius: 12px;
+  transition: transform 0.2s;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.menu-icon:hover,
+.menu-icon:active {
+  transform: scale(1.02);
+}
+
+/* Для маленьких экранов */
+@media (max-width: 360px) {
+  .menu-icon {
+    max-width: 280px;
+  }
 }

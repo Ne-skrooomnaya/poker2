@@ -1,21 +1,30 @@
 // client/src/components/Menu/Menu.js
 
 import React from 'react';
-import image from '../images/image.png'; // путь к твоей картинке
-import './Menu.css'; // опционально, если хочешь стилизовать
+import { useNavigate } from 'react-router-dom';
+import image from '../images/image.png';
+import './Menu.css';
 
 const Menu = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="menu-container">
+      {/* Кнопка "Назад" */}
+      <button onClick={() => navigate(-1)} className="menu-back-btn">
+        ← Назад
+      </button>
+
+      {/* Кликабельная картинка */}
       <a
-        href="https://fullhouselounge.taplink.ws/" // ← замени на свою ссылку
+        href="https://fullhouselounge.taplink.ws/"
         target="_blank"
         rel="noopener noreferrer"
         className="menu-link"
       >
         <img
           src={image}
-          alt="Перейти в Telegram"
+          alt="Перейти на сайт"
           className="menu-icon"
         />
       </a>

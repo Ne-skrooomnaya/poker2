@@ -20,7 +20,6 @@ function UserRatingPage() {
 
   const filteredRatings = useMemo(() => {
     if (!searchTerm.trim()) return ratings;
-
     const term = searchTerm.toLowerCase();
     return ratings.filter(rating =>
       (rating.username || '').toLowerCase().includes(term)
@@ -28,25 +27,28 @@ function UserRatingPage() {
   }, [ratings, searchTerm]);
 
   return (
-    <div className="monthly-race-page"> {/* Используем стиль гонки */}
-      <h1 className="monthly-race-title">Рейтинг Участников</h1>
-      <button onClick={() => navigate('/user')} className="btn-backg">← Назад</button>
+    <div className="user-rating-page mobile-friendly">
+      <h1 className="page-title">Рейтинг Участников</h1>
+      <button onClick={() => navigate('/user')} className="btn-back">
+        ← Назад
+      </button>
 
-      <div className="monthly-race-search">
+      <div className="search-box">
         <input
           type="text"
-          placeholder="Введите имя игрока"
+          placeholder="Имя или username"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
+          inputMode="text"
+          autoCapitalize="none"
+          autoComplete="off"
         />
-        <button>Найти</button>
+        <button className="search-button">Найти</button>
       </div>
 
       <RatingList
-        title="Рейтинг участников"
-        ratings={filteredRatings} // Передаём отфильтрованный список
+        ratings={filteredRatings}
       />
-
     </div>
   );
 }

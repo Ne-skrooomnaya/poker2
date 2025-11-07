@@ -1,60 +1,146 @@
-/* Страница рейтинга пользователя */
+/* client/src/rating/UserRatingPage.css */
+
 .user-rating-page {
-  /* background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); */
   color: white;
-  padding: 20px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 16px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   min-height: 100vh;
+  background: linear-gradient(135deg, #0c0925, #1a153d);
 }
 
 .page-title {
   text-align: center;
-  font-size: 2rem;
-  margin-bottom: 20px;
-  text-shadow: 0 0 10px rgba(255,255,255,0.5);
+  font-size: 1.8rem;
+  margin: 12px 0 16px;
+  font-weight: 700;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
 }
 
-/* Общие компоненты — кнопки, поиск и т.д. */
 .btn-back {
   display: block;
   width: 100%;
-  max-width: 200px;
-  margin: 0 auto 20px;
-  padding: 12px 20px;
-  background: linear-gradient(135deg, rgb(20, 129, 255), rgba(30, 23, 72, 0.81));
-    color: #fff;
-    font-size: 18px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), inset 0 1px 3px rgba(30, 23, 72, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    cursor: pointer;
-    transition: background-color 0.3s
-}
-
-.btn-back:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(0,0,0,0.3);
-  background: linear-gradient(135deg, #0056b3, #003d80);
-}
-
-.search-container {
-  margin-bottom: 25px;
-}
-
-.search-input {
-  width: 100%;
+  max-width: 180px;
+  margin: 0 auto 16px;
   padding: 12px;
-  font-size: 16px;
-  border: 2px solid #493f3f;
-  border-radius: 8px;
-  background: rgba(255,255,255,0.1);
+  background: linear-gradient(135deg, #1481ff, #1e1748);
   color: white;
-  transition: border-color 0.3s ease;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-back:active {
+  transform: scale(0.98);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.search-box {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.search-box input {
+  flex: 1;
+  padding: 12px 14px;
+  font-size: 16px; /* Важно для iOS — не уменьшает шрифт */
+  border: 2px solid #4a4266;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
   outline: none;
 }
 
-.search-input:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0,123,255,0.2);
+.search-box input::placeholder {
+  color: #aaa;
 }
 
-/* Стили RatingList уже добавлены ранее */
+.search-box button {
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+
+.search-box button:active {
+  background: linear-gradient(135deg, #0056b3, #003d80);
+}
+
+/* Адаптивная таблица */
+.rating-container {
+  overflow-x: auto;
+  margin-top: 8px;
+  border-radius: 12px;
+  background: rgba(10, 8, 30, 0.6);
+  padding: 4px;
+}
+
+.monthly-race-table {
+  width: 100%;
+  min-width: 480px; /* Минимальная ширина для читаемости */
+  border-collapse: collapse;
+  color: white;
+  font-size: 15px;
+}
+
+.monthly-race-table th,
+.monthly-race-table td {
+  padding: 10px 8px;
+  text-align: left;
+}
+
+.monthly-race-table th {
+  background: rgba(0, 30, 60, 0.7);
+  font-weight: 700;
+  position: sticky;
+  top: 0;
+}
+
+.monthly-race-table tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.monthly-race-table tr:hover {
+  background: rgba(30, 100, 200, 0.15) !important;
+}
+
+/* Бейджи титулов */
+.title-badge {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 18px;
+  font-size: 10px;
+  font-weight: bold;
+  color: white;
+}
+
+.title-gm {
+  background: #FF5722;
+}
+
+.title-se {
+  background: #E91E63;
+}
+
+.title-default {
+  background: #888;
+}
+
+/* Убираем лишние отступы из RatingList */
+.rating-title {
+  display: none;
+}
