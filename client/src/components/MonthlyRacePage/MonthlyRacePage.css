@@ -51,7 +51,6 @@
 }
 .thead {
     background-color: #002751;
-    width: 100%;
 }
 .monthly-race-table th,
 .monthly-race-table td {
@@ -63,7 +62,9 @@
   background: #333;
   font-weight: bold;
 }
-
+.monthly-race-table tr {
+  max-width: 310px;
+}
 .monthly-race-table tr:nth-child(even) {
   background: rgba(255,255,255,0.05);
 }
