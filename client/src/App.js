@@ -10,6 +10,8 @@ import AdminRatingPage from './components/rating/AdminRatingPage'; // Стран
 import LoadingPage from './components/LoadingPage'; // Компонент для отображения загрузки
 import MonthlyRacePage from './components/MonthlyRacePage/MonthlyRacePage'; // ← Добавь это
 import PastGamesPage from './components/PastGamesPage/PastGamesPage'; // ← Добавь это
+import Menu from './components/Menu/Menu';
+
 // Пример компонента-обертки для защищенных роутов
 // Он будет перенаправлять пользователя, если он не авторизован
 const ProtectedRoute = ({ element: Element, user, allowedRoles, fallbackPath = "/", ...rest }) => {
@@ -68,6 +70,10 @@ function App() {
         <Route 
         path="/past-games" 
         element={<ProtectedRoute element={PastGamesPage} user={user} fallbackPath="/" />}
+        />
+        <Route 
+        path="/Menu" 
+        element={<ProtectedRoute element={Menu} user={user} fallbackPath="/" />}
         />
         {/* Админский рейтинг — пока оставим (на случай прямого захода) */}
         <Route

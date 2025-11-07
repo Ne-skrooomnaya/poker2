@@ -1,0 +1,22 @@
+/* client/src/components/Menu/Menu.css */
+
+.menu-container {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.menu-link {
+  display: inline-block;
+}
+
+.menu-icon {
+  width: 60px;    /* или любая нужная ширина */
+  height: auto;
+  border-radius: 8px;
+  transition: transform 0.2s;
+}
+
+.menu-icon:hover {
+  transform: scale(1.05);
+}

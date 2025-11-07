@@ -26,7 +26,7 @@ const UserPage = ({ onLogout }) => {
             </div>
         </div>
         <div class="bottom-section">
-            <button class="bottom-section-button" onClick={() => navigate('/')}>Меню</button>
+            <button class="bottom-section-button" onClick={() => navigate('/Menu')}>Меню</button>
             <button class="bottom-section-button" onClick={() => navigate('/')}>Чайная карта</button>
             <button class="bottom-section-button" onClick={() => navigate('/')}>Паркур</button>
             <button class="bottom-section-button" onClick={() => navigate('/')}>Карта бара</button>
