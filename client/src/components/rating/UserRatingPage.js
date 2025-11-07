@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import RatingList from './RatingList';
+import RatingList from './rating/RatingList';
 
 const BACKEND_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
@@ -11,13 +11,6 @@ function UserRatingPage() {
   const [ratings, setRatings] = useState([]);
   const [users, setUsers] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
-
-  // Функция для обновления рейтинга (вызывается из админки)
-  const refreshRatings = () => {
-    fetch(`${BACKEND_URL}/rating`)
-      .then(res => res.json())
-      .then(data => setRatings(data));
-  };
 
   useEffect(() => {
     fetch(`${BACKEND_URL}/rating`)
@@ -35,11 +28,7 @@ function UserRatingPage() {
       });
   }, []);
 
-  // Сброс поиска при обновлении рейтинга
-  useEffect(() => {
-    setSearchTerm('');
-  }, [ratings]);
-
+  // Фильтрация
   const filteredRatings = useMemo(() => {
     if (!searchTerm.trim()) return ratings;
 
@@ -48,6 +37,7 @@ function UserRatingPage() {
       if (!user) return false;
       const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim().toLowerCase();
       const username = (user.username || '').toLowerCase();
+
       return (
         fullName.includes(searchTerm.toLowerCase()) ||
         username.includes(searchTerm.toLowerCase())
@@ -72,7 +62,6 @@ function UserRatingPage() {
         title="Рейтинг участников"
         ratings={filteredRatings}
         users={users}
-        onRefresh={refreshRatings} // Передаём функцию обновления
       />
     </div>
   );
