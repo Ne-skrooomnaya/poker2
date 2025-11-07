@@ -45,6 +45,7 @@
   width: 100%;
   border-collapse: collapse;
   color: white;
+  overflow-x: 'auto';
   background: rgba(4, 2, 39, 0.5);
   border-radius: 12px;
   overflow: hidden;
