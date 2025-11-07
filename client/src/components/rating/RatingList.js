@@ -6,7 +6,7 @@ import './RatingList.css';
 
 const BACKEND_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
-function RatingList({ title, refreshKey = 0, ratings: externalRatings, users: externalUsers }) {
+function RatingList({ title, refreshKey = 0, ratings: externalRatings, users: externalUsers, onRefresh }) {
   const [ratingData, setRatingData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
