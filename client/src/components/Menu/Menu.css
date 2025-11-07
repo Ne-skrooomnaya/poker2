@@ -6,7 +6,6 @@
   align-items: center;
   padding: 20px 16px;
   /* Убираем min-height и vertical-centering */
-  background: linear-gradient(135deg, #0c0925, #1a153d);
   color: white;
 }
 
