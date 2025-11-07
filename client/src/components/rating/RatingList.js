@@ -1,4 +1,4 @@
-// client/src/components/rating/RatingList.js
+// client/src/rating/RatingList.js
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -6,7 +6,7 @@ import './RatingList.css';
 
 const BACKEND_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
-function RatingList({ title, refreshKey = 0, ratings: externalRatings, users: externalUsers }) {
+function RatingList({ title, refreshKey = 0, ratings: externalRatings }) {
   const [ratingData, setRatingData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -46,15 +46,8 @@ function RatingList({ title, refreshKey = 0, ratings: externalRatings, users: ex
           {dataToShow.length > 0 ? (
             <ul className="rating-list">
               {dataToShow.map((item, index) => {
-                let displayName = 'Неизвестный пользователь';
-                if (externalUsers && item.userId) {
-                  const user = externalUsers[item.userId];
-                  if (user) {
-                    displayName = `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.username || 'Без имени';
-                  }
-                } else {
-                  displayName = item.username || item.firstName || 'Неизвестный пользователь';
-                }
+                // Используем username напрямую из рейтинга
+                const displayName = item.username || 'Неизвестный пользователь';
 
                 return (
                   <li key={item._id || index} className="rating-item">
