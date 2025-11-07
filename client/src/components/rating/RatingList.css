@@ -1,50 +1,26 @@
-
 /* client/src/rating/RatingList.css */
 
 .rating-container {
   background: rgba(255, 255, 255, 0.05);
-  padding: 20px;
+  padding: 16px;
   border-radius: 12px;
   margin-top: 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
-.rating-title {
-  text-align: center;
-  font-size: 1.5rem;
-  margin-bottom: 20px;
-  color: white;
-  font-weight: 600;
-}
-
-.rating-loading,
-.rating-error,
-.rating-empty {
-  text-align: center;
-  padding: 15px;
-  color: #aaa;
-  font-style: italic;
-}
-
-.rating-error {
-  color: #ff6b6b !important;
-  font-weight: bold;
-}
-
-/* Стили таблицы — теперь здесь */
 .monthly-race-table {
   width: 100%;
-  min-width: 480px;
   border-collapse: collapse;
   color: white;
   background: rgba(4, 2, 39, 0.5);
   border-radius: 12px;
   overflow: hidden;
+  font-size: 14px; /* Уменьшаем шрифт для мобильных */
 }
 
 .monthly-race-table th,
 .monthly-race-table td {
-  padding: 10px 8px;
+  padding: 8px 6px; /* Уменьшаем отступы */
   text-align: left;
 }
 
@@ -65,12 +41,12 @@
 
 .title-badge {
   display: inline-block;
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   text-align: center;
-  line-height: 18px;
-  font-size: 10px;
+  line-height: 16px;
+  font-size: 8px;
   font-weight: bold;
   color: white;
 }
@@ -87,7 +63,24 @@
   background: #888;
 }
 
-/* Убираем заголовок, если он не нужен */
-.rating-title {
-  display: none;
+/* Добавляем горизонтальную прокрутку */
+.rating-container {
+  overflow-x: auto;
+}
+
+/* Для маленьких экранов */
+@media (max-width: 480px) {
+  .monthly-race-table {
+    font-size: 13px;
+  }
+  .monthly-race-table th,
+  .monthly-race-table td {
+    padding: 6px 4px;
+  }
+  .title-badge {
+    width: 14px;
+    height: 14px;
+    line-height: 14px;
+    font-size: 7px;
+  }
 }
