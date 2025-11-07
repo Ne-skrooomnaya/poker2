@@ -1,4 +1,5 @@
-/* Контейнер рейтинга */
+/* client/src/rating/RatingList.css */
+
 .rating-container {
   background: rgba(255, 255, 255, 0.05);
   padding: 20px;
@@ -29,9 +30,10 @@
   font-weight: bold;
 }
 
-/* Стили таблицы — копия из MonthlyRacePage.css */
+/* Стили таблицы — теперь здесь */
 .monthly-race-table {
   width: 100%;
+  min-width: 480px;
   border-collapse: collapse;
   color: white;
   background: rgba(4, 2, 39, 0.5);
@@ -41,38 +43,50 @@
 
 .monthly-race-table th,
 .monthly-race-table td {
-  padding: 12px;
+  padding: 10px 8px;
   text-align: left;
 }
 
 .monthly-race-table th {
-  background: #333;
-  font-weight: bold;
+  background: rgba(0, 30, 60, 0.7);
+  font-weight: 700;
+  position: sticky;
+  top: 0;
 }
 
 .monthly-race-table tr:nth-child(even) {
-  background: rgba(255,255,255,0.05);
+  background: rgba(255,255,255,0.03);
 }
 
-.monthly-race-table .title-badge {
+.monthly-race-table tr:hover {
+  background: rgba(30, 100, 200, 0.15) !important;
+}
+
+.title-badge {
   display: inline-block;
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   text-align: center;
-  line-height: 20px;
+  line-height: 18px;
+  font-size: 10px;
   font-weight: bold;
   color: white;
 }
 
-.monthly-race-table .title-gm {
+.title-gm {
   background: #FF5722;
 }
 
-.monthly-race-table .title-se {
+.title-se {
   background: #E91E63;
 }
 
-.monthly-race-table .title-default {
+.title-default {
   background: #888;
+}
+
+/* Убираем заголовок, если он не нужен */
+.rating-title {
+  display: none;
 }
