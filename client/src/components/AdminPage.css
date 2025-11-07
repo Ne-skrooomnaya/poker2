@@ -10,7 +10,16 @@
   color: #333;
   text-align: center;
 }
+.top-buttonsad {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
+    gap: 16px;
+    padding-right: 30px;
+    max-width: 200px;
+    min-width: 95px;
+}
 .home-page h1 {
   margin-bottom: 20px;
   color: #222;

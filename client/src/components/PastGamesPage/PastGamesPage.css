@@ -1,89 +1,163 @@
-.past-games-page {
-  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+/* client/src/components/PastGamesPage/PastGamesPage.css */
+
+.monthly-race-page {
   color: white;
   padding: 20px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   min-height: 100vh;
+  background: linear-gradient(135deg, #0c0925, #1a153d);
 }
 
-.past-games-title {
+.monthly-race-title {
   text-align: center;
   font-size: 2rem;
   margin-bottom: 20px;
   text-shadow: 0 0 10px rgba(255,255,255,0.5);
 }
 
-.past-games-filters {
-  background: #333;
-  padding: 15px;
-  border-radius: 8px;
+.btn-backg {
+  display: block;
+  width: 100%;
+  max-width: 200px;
+  margin: 0 auto 20px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, rgb(20, 129, 255), rgba(30, 23, 72, 0.81));
+  color: #fff;
+  font-size: 18px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), inset 0 1px 3px rgba(30, 23, 72, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.monthly-race-search {
+  display: flex;
+  gap: 10px;
   margin-bottom: 20px;
 }
 
-.past-games-filters h3 {
-  margin: 0 0 10px 0;
-}
-
-.past-games-filters label {
-  display: block;
-  margin-bottom: 5px;
-}
-
-.past-games-filters input[type="text"] {
-  width: 100%;
-  padding: 8px;
+.monthly-race-search input {
+  flex: 1;
+  padding: 12px;
   font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.past-games-game {
-  background: #222;
-  padding: 15px;
+  border: 2px solid #493f3f;
   border-radius: 8px;
-  margin-bottom: 15px;
+  background: rgba(255,255,255,0.1);
+  color: white;
+  transition: border-color 0.3s ease;
+  outline: none;
 }
 
-.past-games-game-header {
+.monthly-race-search button {
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+/* Карточка игры */
+.past-game-card {
+  background: rgba(10, 8, 30, 0.6);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.past-game-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
-.past-games-game-header h3 {
+.past-game-header h3 {
+  font-size: 1.2rem;
   margin: 0;
+  font-weight: 600;
 }
 
-.past-games-players {
-  background: #333;
-  padding: 10px;
-  border-radius: 4px;
+.game-date {
+  font-size: 0.9rem;
+  color: #aaa;
 }
 
-.past-games-player {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 0;
-  border-bottom: 1px solid #444;
+/* Стили таблицы — копия из MonthlyRacePage */
+.monthly-race-table {
+  width: 100%;
+  min-width: 480px;
+  border-collapse: collapse;
+  color: white;
+  background: rgba(4, 2, 39, 0.5);
+  border-radius: 12px;
+  overflow: hidden;
 }
 
-.past-games-player .title-badge {
+.monthly-race-table th,
+.monthly-race-table td {
+  padding: 10px 8px;
+  text-align: left;
+}
+
+.monthly-race-table th {
+  background: rgba(0, 30, 60, 0.7);
+  font-weight: 700;
+  position: sticky;
+  top: 0;
+}
+
+.monthly-race-table tr:nth-child(even) {
+  background: rgba(255,255,255,0.03);
+}
+
+.monthly-race-table tr:hover {
+  background: rgba(30, 100, 200, 0.15) !important;
+}
+
+.title-badge {
   display: inline-block;
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   text-align: center;
-  line-height: 20px;
+  line-height: 18px;
+  font-size: 10px;
   font-weight: bold;
   color: white;
 }
 
-.past-games-player .title-gm {
+.title-gm {
   background: #FF5722;
 }
 
-.past-games-player .title-se {
+.title-se {
   background: #E91E63;
+}
+
+.title-default {
+  background: #888;
+}
+
+/* Для маленьких экранов */
+@media (max-width: 360px) {
+  .monthly-race-table {
+    min-width: 320px;
+    font-size: 13px;
+  }
+  .monthly-race-table th,
+  .monthly-race-table td {
+    padding: 6px 4px;
+  }
+  .title-badge {
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    font-size: 8px;
+  }
 }

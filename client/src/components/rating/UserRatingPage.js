@@ -28,7 +28,7 @@ function UserRatingPage() {
 
   return (
     <div className="user-rating-page"> {/* Убираем mobile-friendly */}
-      <h1 className="page-title">Рейтинг Участников</h1>
+      <h1 className="page-title">Рейтинг<br></br>Участников</h1>
       <button onClick={() => navigate('/user')} className="btn-back btn-backo">
         ← Назад
       </button>
