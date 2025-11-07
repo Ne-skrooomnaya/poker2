@@ -42,26 +42,39 @@ function RatingList({ title, refreshKey = 0, ratings: externalRatings }) {
       {error && <p className="rating-error">{error}</p>}
 
       {!loading && !error && (
-        <div>
-          {dataToShow.length > 0 ? (
-            <ul className="rating-list">
-              {dataToShow.map((item, index) => {
-                // Используем username напрямую из рейтинга
-                const displayName = item.username || 'Неизвестный пользователь';
-
-                return (
-                  <li key={item._id || index} className="rating-item">
-                    <span className="rating-name">
-                      {index + 1}. {displayName}
-                    </span>
-                    <span className="rating-score">Score: {item.score || 0}</span>
-                  </li>
-                );
-              })}
-            </ul>
-          ) : (
-            <p className="rating-empty">Рейтинг пока пуст.</p>
-          )}
+        <div style={{ overflowX: 'auto' }}>
+          <table className="monthly-race-table">
+            <thead className="thead">
+              <tr>
+                <th>№</th>
+                <th>Титул</th>
+                <th>Игрок</th>
+                <th>Очки</th>
+              </tr>
+            </thead>
+            <tbody>
+              {dataToShow.length > 0 ? (
+                dataToShow.map((item, index) => (
+                  <tr key={item._id || index}>
+                    <td>{index + 1}</td>
+                    <td>
+                      <span className={`title-badge ${item.title === 'GM' ? 'title-gm' : item.title === 'SE' ? 'title-se' : 'title-default'}`}>
+                        {item.title || ''}
+                      </span>
+                    </td>
+                    <td>{item.username || 'Неизвестный'}</td>
+                    <td style={{ textAlign: 'right' }}>{item.score?.toLocaleString() || 0}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="4" style={{ textAlign: 'center', padding: '20px' }}>
+                    Рейтинг пока пуст.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
       )}
     </div>

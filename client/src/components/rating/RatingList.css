@@ -29,41 +29,50 @@
   font-weight: bold;
 }
 
-/* Список рейтинга */
-.rating-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+/* Стили таблицы — копия из MonthlyRacePage.css */
+.monthly-race-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: white;
+  background: rgba(4, 2, 39, 0.5);
+  border-radius: 12px;
+  overflow: hidden;
 }
 
-.rating-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 14px;
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-  margin-bottom: 12px;
-  transition: background 0.2s ease, transform 0.2s ease;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+.monthly-race-table th,
+.monthly-race-table td {
+  padding: 12px;
+  text-align: left;
 }
 
-.rating-item:hover {
-  background: rgba(255, 255, 255, 0.05);
-  transform: translateY(-2px);
-}
-
-.rating-name {
+.monthly-race-table th {
+  background: #333;
   font-weight: bold;
-  color: #4ff7e1;
-  font-size: 1.1rem;
 }
 
-.rating-score {
-  color: #aae0ff;
+.monthly-race-table tr:nth-child(even) {
+  background: rgba(255,255,255,0.05);
+}
+
+.monthly-race-table .title-badge {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 20px;
   font-weight: bold;
-  font-size: 1.1rem;
-  background: rgba(102, 177, 187, 0.15);
-  padding: 4px 12px;
-  border-radius: 20px;
+  color: white;
+}
+
+.monthly-race-table .title-gm {
+  background: #FF5722;
+}
+
+.monthly-race-table .title-se {
+  background: #E91E63;
+}
+
+.monthly-race-table .title-default {
+  background: #888;
 }

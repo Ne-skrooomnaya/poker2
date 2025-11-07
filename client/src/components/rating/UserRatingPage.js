@@ -28,23 +28,25 @@ function UserRatingPage() {
   }, [ratings, searchTerm]);
 
   return (
-    <div className="user-rating-page">
-      <h1 className="page-title">Рейтинг Участников</h1>
-      <button onClick={() => navigate('/user')} className="btn-back">← Назад</button>
-      <div className="search-container">
+    <div className="monthly-race-page"> {/* Используем стиль гонки */}
+      <h1 className="monthly-race-title">Рейтинг Участников</h1>
+      <button onClick={() => navigate('/user')} className="btn-backg">← Назад</button>
+
+      <div className="monthly-race-search">
         <input
           type="text"
-          placeholder="Поиск по username..."
+          placeholder="Введите имя игрока"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="search-input"
         />
+        <button>Найти</button>
       </div>
+
       <RatingList
         title="Рейтинг участников"
-        ratings={filteredRatings}
-        // убираем users, потому что теперь username в каждом rating
+        ratings={filteredRatings} // Передаём отфильтрованный список
       />
+
     </div>
   );
 }
