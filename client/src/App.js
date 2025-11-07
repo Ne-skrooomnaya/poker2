@@ -11,7 +11,9 @@ import LoadingPage from './components/LoadingPage'; // Компонент для
 import MonthlyRacePage from './components/MonthlyRacePage/MonthlyRacePage'; // ← Добавь это
 import PastGamesPage from './components/PastGamesPage/PastGamesPage'; // ← Добавь это
 import Menu from './components/Menu/Menu';
-
+import TeaMenu from './components/TeaMenu/TeaMenu';
+import HookahMenu from './components/HookahMenu/HookahMenu';
+import BarMenu from './components/BarMenu/BarMenu';
 // Пример компонента-обертки для защищенных роутов
 // Он будет перенаправлять пользователя, если он не авторизован
 const ProtectedRoute = ({ element: Element, user, allowedRoles, fallbackPath = "/", ...rest }) => {
@@ -74,6 +76,18 @@ function App() {
         <Route 
         path="/Menu" 
         element={<ProtectedRoute element={Menu} user={user} fallbackPath="/" />}
+        />
+        <Route 
+        path="/tea-menu" 
+        element={<ProtectedRoute element={TeaMenu} user={user} fallbackPath="/" />}
+        />
+        <Route 
+        path="/hookah-menu" 
+        element={<ProtectedRoute element={HookahMenu} user={user} fallbackPath="/" />}
+        />
+        <Route 
+        path="/bar-menu" 
+        element={<ProtectedRoute element={BarMenu} user={user} fallbackPath="/" />}
         />
         {/* Админский рейтинг — пока оставим (на случай прямого захода) */}
         <Route

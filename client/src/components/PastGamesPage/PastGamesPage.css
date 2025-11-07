@@ -1,7 +1,6 @@
 /* client/src/components/PastGamesPage/PastGamesPage.css */
 
 .past-games-page {
-  background: linear-gradient(135deg, #0c0925, #1a153d);
   color: white;
   padding: 20px;
   min-height: 100vh;

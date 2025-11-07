@@ -29,7 +29,7 @@ const pastGames = [
       { place: 1, title: '', name: 'Артём Волков', score: '+62.300.000' },
       { place: 2, title: '', name: 'Лейла Алиева', score: '+34.700.000' },
       { place: 3, title: '', name: 'Дмитрий Соколов', score: '+22.100.000' },
-      { place: 4, title: '', name: 'Марина Кузнецова', score: '+17.800.000' }
+      { place: 4, title: '', name: 'Марина Кузнец', score: '+17.800.000' }
     ]
   },
   {
@@ -91,7 +91,14 @@ const pastGames = [
 
   return (
     <div className="past-games-page">
-  <h1 className="past-games-title">Прошедшие игры</h1>
+  <h1 className="past-games-title">Прошедшие<br></br>игры</h1>
+    {/* Кнопка "Назад" */}
+  <button
+    onClick={() => navigate('/user')}
+    className="btn-back"
+  >
+    ← Назад
+  </button>
 
   {/* Кнопки фильтров */}
   <div style={{ marginBottom: '20px' }}>
@@ -187,13 +194,7 @@ const pastGames = [
     </div>
   ))}
 
-  {/* Кнопка "Назад" */}
-  <button
-    onClick={() => navigate('/user')}
-    className="btn-back"
-  >
-    ← Назад
-  </button>
+
 </div>
   );
 }
