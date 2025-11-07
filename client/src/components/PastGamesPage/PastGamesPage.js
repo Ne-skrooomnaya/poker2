@@ -24,12 +24,12 @@ const pastGames = [
   {
     id: 1,
     tournament: 'Турнир Race Division',
-      date: '05.11.2025',
+    date: '05.11.2025',
     players: [
-      { place: 1, title: 'GM', name: 'Константин Путилов', score: '+58.500.000' },
-      { place: 2, title: 'SE', name: 'Тимур Шакиров', score: '+30.000.000' },
-      { place: 3, title: 'SE', name: 'Айдар Гизатуллин', score: '+20.000.000' },
-      { place: 4, title: 'SE', name: 'Эдуард Мосин', score: '+15.000.000' }
+      { place: 1, title: '', name: 'Артём Волков', score: '+62.300.000' },
+      { place: 2, title: '', name: 'Лейла Алиева', score: '+34.700.000' },
+      { place: 3, title: '', name: 'Дмитрий Соколов', score: '+22.100.000' },
+      { place: 4, title: '', name: 'Марина Кузнецова', score: '+17.800.000' }
     ]
   },
   {
@@ -37,8 +37,8 @@ const pastGames = [
     tournament: 'Джокер',
     date: '05.11.2025',
     players: [
-      { place: 1, title: 'SE', name: 'Иван Иванов', score: '+10.000.000' },
-      { place: 2, title: 'SE', name: 'Петр Петров', score: '+5.000.000' }
+      { place: 1, title: '', name: 'Рустам Гусейнов', score: '+13.500.000' },
+      { place: 2, title: '', name: 'Анна Петрова', score: '+6.200.000' }
     ]
   },
   {
@@ -46,8 +46,8 @@ const pastGames = [
     tournament: 'Холдем',
     date: '05.11.2025',
     players: [
-      { place: 1, title: 'SE', name: 'Сергей Сергеев', score: '+8.000.000' },
-      { place: 2, title: 'SE', name: 'Андрей Андреев', score: '+4.000.000' }
+      { place: 1, title: '', name: 'Егор Морозов', score: '+9.800.000' },
+      { place: 2, title: '', name: 'София Иванова', score: '+4.500.000' }
     ]
   }
 ];
@@ -175,7 +175,7 @@ const pastGames = [
           <div key={player.place} className="past-games-player">
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <span style={{ fontWeight: 'bold', marginRight: '10px' }}>{player.place}</span>
-              <span className={`title-badge ${player.title === 'GM' ? 'title-gm' : 'title-se'}`}>
+              <span className={`title-badge ${player.title === '' ? 'title-gm' : 'title-se'}`}>
                 {player.title}
               </span>
               <span>{player.name}</span>
