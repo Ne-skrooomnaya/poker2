@@ -27,9 +27,9 @@ const UserPage = ({ onLogout }) => {
         </div>
         <div class="bottom-section">
             <button class="bottom-section-button" onClick={() => navigate('/Menu')}>Меню</button>
-            <button class="bottom-section-button" onClick={() => navigate('/')}>Чайная карта</button>
-            <button class="bottom-section-button" onClick={() => navigate('/')}>Паркур</button>
-            <button class="bottom-section-button" onClick={() => navigate('/')}>Карта бара</button>
+            <button class="bottom-section-button" onClick={() => navigate('/tea-menu')}>Чайная карта</button>
+            <button class="bottom-section-button" onClick={() => navigate('/hookah-menu')}>Паркур</button>
+            <button class="bottom-section-button" onClick={() => navigate('/bar-menu')}>Карта бара</button>
         </div>
     </>
   );
