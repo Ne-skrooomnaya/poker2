@@ -8,7 +8,7 @@ const Menu = () => {
   return (
     <div className="menu-container">
       <a
-        href="https://t.me/your_channel" // ← замени на свою ссылку
+        href="https://fullhouselounge.taplink.ws/" // ← замени на свою ссылку
         target="_blank"
         rel="noopener noreferrer"
         className="menu-link"
