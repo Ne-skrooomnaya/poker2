@@ -23,6 +23,9 @@ function MonthlyRacePage() {
   return (
     <div className="monthly-race-page">
   <h1 className="monthly-race-title">Текущая гонка месяца</h1>
+    <button onClick={() => navigate('/user')} className="btn-back">
+    ← Назад
+  </button>
   <p>ноябрь 2025 года</p>
 
   <div className="monthly-race-search">
@@ -62,9 +65,7 @@ function MonthlyRacePage() {
     </table>
   </div>
 
-  <button onClick={() => navigate('/user')} className="btn-backg">
-    ← Назад
-  </button>
+
 </div>
   );
 }
